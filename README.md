@@ -7,7 +7,7 @@ A Krita plugin that adds layer management and automation tools directly to the L
 ### Color Labeling (LazyColorLabel)
 - Adds a color label dropdown to Krita's Layer Docker
 - Quick assignment of color labels to layers and groups
-- Works with selected layers or current active layer
+- Updating a group will not change its children's color labels
 
 ### Color Filtering (LazyColorFilter)
 - Toggle visibility of layers/groups by color label
