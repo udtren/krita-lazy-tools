@@ -1,4 +1,1 @@
 __pycache__/
-
-# Stop tracking scripts folder but keep existing files
-lazy_tools/scripts/
