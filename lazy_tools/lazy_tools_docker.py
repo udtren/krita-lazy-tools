@@ -120,15 +120,15 @@ class LazyToolsDockerWidget(QDockWidget):
 
         main_layout.addWidget(self.color_filter_section)
 
+        # Add control buttons directly below Color Filter section
+        self.add_control_buttons(main_layout)
+
         # Create collapsible Scripts section (collapsed by default)
         self.scripts_section = CollapsibleSection("Scripts", collapsed=True)
         self.scripts_content = ScriptsSection(self)
         self.scripts_section.set_content_widget(self.scripts_content)
 
         main_layout.addWidget(self.scripts_section)
-
-        # Add control buttons
-        self.add_control_buttons(main_layout)
 
         # Add small stretch at the end to push content up slightly
         main_layout.addStretch(1)

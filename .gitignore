@@ -1,1 +1,4 @@
 __pycache__/
+
+# Ignore scripts folder
+lazy_tools/scripts/*.py
