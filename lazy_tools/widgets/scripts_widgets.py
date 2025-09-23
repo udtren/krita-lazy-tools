@@ -31,7 +31,19 @@ class ScriptsSection(QWidget):
         self.scripts_folder = os.path.join(
             os.path.dirname(os.path.dirname(__file__)), "scripts"
         )
+        self._ensure_scripts_folder_exists()
         self.setup_ui()
+
+    def _ensure_scripts_folder_exists(self):
+        """Create the scripts folder if it doesn't exist."""
+        try:
+            if not os.path.exists(self.scripts_folder):
+                os.makedirs(self.scripts_folder)
+                print(f"Created scripts folder: {self.scripts_folder}")
+            else:
+                print(f"Scripts folder exists: {self.scripts_folder}")
+        except Exception as e:
+            print(f"Error creating scripts folder: {e}")
 
     def setup_ui(self):
         """Setup the scripts section UI."""
