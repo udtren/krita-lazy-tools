@@ -1,5 +1,4 @@
 __pycache__/
 
-# Ignore all files in scripts folder but keep the folder structure
-lazy_tools/scripts/*
-!lazy_tools/scripts/.gitkeep*.py
+# Ignore Python script files in scripts folder but keep the folder structure
+lazy_tools/scripts/*.py*.py

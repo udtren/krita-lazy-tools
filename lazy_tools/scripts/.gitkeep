@@ -1,0 +1,2 @@
+# This file ensures the scripts folder is tracked by git
+# while allowing the actual script files to be ignored
