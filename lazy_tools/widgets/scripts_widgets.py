@@ -54,7 +54,7 @@ class ScriptsSection(QWidget):
         # Scroll area for script buttons
         self.scroll_area = QScrollArea()
         self.scroll_area.setWidgetResizable(True)
-        self.scroll_area.setMaximumHeight(200)  # Limit height
+        self.scroll_area.setMaximumHeight(500)  # Limit height
         self.scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
         self.scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
