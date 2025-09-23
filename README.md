@@ -1,6 +1,6 @@
 # Lazy Tools for Krita
 
-A Krita plugin suite that adds layer management and automation tools directly to the Layer Docker.
+A Krita plugin that adds layer management and automation tools directly to the Layer Docker.
 ![Setting](./lazy_tools/images/1.png)
 ## Features
 
