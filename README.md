@@ -55,7 +55,9 @@ python lazy_segment.py input.jpg "car" output_cutout.png --cutout
 
 ### Installation & Setup
 
-This implementation is tested on Windows 11 with NVIDIA 50XX series cards. Compatibility with other environments is not guaranteed.
+This implementation is tested on Windows 11 with NVIDIA 50XX series cards.
+Python version is 3.12.10.
+Compatibility with other environments is not guaranteed.
 
 #### Installation Steps
 
