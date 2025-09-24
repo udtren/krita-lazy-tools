@@ -19,6 +19,7 @@ from PyQt5.QtCore import Qt, QSize
 from PyQt5.QtGui import QIcon, QPixmap, QColor
 from lazy_tools.widgets.color_filter_widgets import ColorFilterSection
 from lazy_tools.widgets.scripts_widgets import ScriptsSection
+from lazy_tools.widgets.segment_widgets import SegmentSection
 
 
 class CollapsibleSection(QWidget):
@@ -122,6 +123,13 @@ class LazyToolsDockerWidget(QDockWidget):
 
         # Add control buttons directly below Color Filter section
         self.add_control_buttons(main_layout)
+
+        # Create collapsible AI Segmentation section
+        self.segment_section = CollapsibleSection("AI Segmentation", collapsed=True)
+        self.segment_content = SegmentSection(self)
+        self.segment_section.set_content_widget(self.segment_content)
+
+        main_layout.addWidget(self.segment_section)
 
         # Create collapsible Scripts section (collapsed by default)
         self.scripts_section = CollapsibleSection("Scripts", collapsed=True)

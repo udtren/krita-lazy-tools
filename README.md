@@ -17,3 +17,15 @@ A Krita plugin that adds layer management and automation tools.
 - Execute custom Python scripts
 - Auto-discovery of `.py` files in the `lazy_tools/scripts/` folder
 - "Reload Scripts" option for dynamic script development
+
+## Florence + Sam2.1
+install the necessary package
+
+python -m venv .venv
+
+you python version should be "3.12.10" because I didnt test other version
+
+install packages in venv
+pip install -r .\requirements.txt
+
+download "sam2.1_hiera_large.pt" and "sam2.1_hiera_base_plus.pt" and put them in models folder

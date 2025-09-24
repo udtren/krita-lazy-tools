@@ -1,28 +1,17 @@
 """
-Florence-2 + SAM2 Segmentation Test Script
+Florence-2 + SAM2 Segmentation Pipeline
 
-This script demonstrates the workflow of:                # Fallback: Try loading with different parameters
-                self.florence_processor = AutoProcessor.from_pretrained(
-                    "microsoft/Florence-2-large", 
-                    trust_remote_code=True
-                )
-                
-                # Load model with explicit configuration to avoid SDPA and flash attention issues
-                self.florence_model = AutoModelForCausalLM.from_pretrained(
-                    "microsoft/Florence-2-large", 
-                    torch_dtype=torch.float32,  # Use float32 for CPU compatibility
-                    trust_remote_code=True,
-                    device_map="cpu",  # Force CPU to avoid flash attention
-                    use_flash_attention_2=False,  # Disable flash attention
-                    _attn_implementation="eager"  # Force eager attention
-                ).to(self.device)e-2 for caption-to-phrase grounding (finding "girl" in image)
+This script demonstrates the workflow of:
+1. Using Florence-2 for caption-to-phrase grounding (finding objects in image)
 2. Using SAM2 to generate precise segmentation masks from bounding boxes
 3. Creating red mask overlay visualization
 
-Test only - not a Krita plugin.
+Can be used as both a standalone script and imported module.
 """
 
 import os
+import sys
+import argparse
 import numpy as np
 import torch
 from PIL import Image, ImageDraw
@@ -433,18 +422,75 @@ class FloSAM2Pipeline:
             print(f"❌ Error creating red mask overlay: {e}")
             return None
     
-    def process_image(self, image_path, text_prompt, output_path=None):
+    def create_transparent_cutout(self, image, masks, output_path):
         """
-        Complete pipeline: Florence grounding + SAM2 segmentation + red mask overlay.
+        Create image where everything except segmented targets is transparent.
+        
+        Args:
+            image: PIL Image
+            masks: List of mask dictionaries from SAM2
+            output_path: str, output file path
+        """
+        try:
+            print(f"✂️ Creating transparent cutout with {len(masks)} masks")
+            
+            # Convert PIL to RGBA (with alpha channel)
+            if image.mode != 'RGBA':
+                image_rgba = image.convert('RGBA')
+            else:
+                image_rgba = image.copy()
+            
+            # Convert to numpy array
+            image_array = np.array(image_rgba)
+            
+            # Create combined mask (union of all masks)
+            height, width = image_array.shape[:2]
+            combined_mask = np.zeros((height, width), dtype=bool)
+            
+            for i, mask_data in enumerate(masks):
+                mask = mask_data['mask']
+                
+                # Ensure mask is boolean
+                if mask.dtype != bool:
+                    mask = mask.astype(bool)
+                
+                # Add to combined mask
+                combined_mask = combined_mask | mask
+                print(f"  Added mask {i+1} to cutout")
+            
+            # Set alpha channel: 255 (opaque) for segmented areas, 0 (transparent) for background
+            image_array[:, :, 3] = np.where(combined_mask, 255, 0)
+            
+            # Convert back to PIL and save as PNG (to preserve transparency)
+            result_image = Image.fromarray(image_array, 'RGBA')
+            
+            # Ensure output is PNG for transparency support
+            if not output_path.lower().endswith('.png'):
+                output_path = os.path.splitext(output_path)[0] + '.png'
+            
+            result_image.save(output_path, 'PNG')
+            
+            print(f"✅ Saved transparent cutout: {output_path}")
+            return output_path
+            
+        except Exception as e:
+            print(f"❌ Error creating transparent cutout: {e}")
+            return None
+    
+    def process_image(self, image_path, text_prompt, output_path=None, output_type='overlay'):
+        """
+        Complete pipeline: Florence grounding + SAM2 segmentation + output generation.
         
         Args:
             image_path: str, path to input image
             text_prompt: str, search query (e.g., "girl")
             output_path: str, optional output path
+            output_type: str, 'overlay' for red mask or 'cutout' for transparent background
         """
         try:
             print(f"\n🚀 Processing: {image_path}")
             print(f"🔍 Searching for: '{text_prompt}'")
+            print(f"📄 Output type: {output_type}")
             
             # Load image
             if not os.path.exists(image_path):
@@ -471,14 +517,20 @@ class FloSAM2Pipeline:
                 print("❌ No segmentation masks generated")
                 return
             
-            # Step 3: Create red mask overlay
+            # Step 3: Create output based on type
             if not output_path:
                 # Generate output path
                 base_name = os.path.splitext(os.path.basename(image_path))[0]
                 output_dir = os.path.dirname(image_path)
-                output_path = os.path.join(output_dir, f"{base_name}_mask.jpg")
+                if output_type == 'cutout':
+                    output_path = os.path.join(output_dir, f"{base_name}_cutout.png")
+                else:
+                    output_path = os.path.join(output_dir, f"{base_name}_mask.jpg")
             
-            result_path = self.create_red_mask_overlay(image, segmentation_masks, output_path)
+            if output_type == 'cutout':
+                result_path = self.create_transparent_cutout(image, segmentation_masks, output_path)
+            else:
+                result_path = self.create_red_mask_overlay(image, segmentation_masks, output_path)
             
             if result_path:
                 print(f"\n✅ Pipeline completed successfully!")
@@ -489,35 +541,99 @@ class FloSAM2Pipeline:
                 print(f"  - Found {len(grounding_results)} objects")
                 print(f"  - Generated {len(segmentation_masks)} masks")
                 print(f"  - Objects: {[r['label'] for r in grounding_results]}")
+                print(f"  - Output type: {output_type}")
             
         except Exception as e:
             print(f"❌ Pipeline error: {e}")
 
 
 def main():
-    """Test the Florence-2 + SAM2 pipeline."""
-    print("🔬 Florence-2 + SAM2 Segmentation Test")
+    """Florence-2 + SAM2 segmentation pipeline with command-line arguments."""
+    parser = argparse.ArgumentParser(
+        description="Florence-2 + SAM2 Segmentation Pipeline",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  python lazy_segment.py input.jpg "girl" output.png
+  python lazy_segment.py /path/to/image.jpg "person with hat" /path/to/result.jpg
+  python lazy_segment.py image.png "car" (auto-generate output path)
+  python lazy_segment.py image.jpg "girl" --cutout (create transparent cutout)
+  python lazy_segment.py image.jpg "car" result.png --cutout (transparent cutout with custom path)
+        """
+    )
+    
+    parser.add_argument(
+        "image_path",
+        help="Path to the input image file"
+    )
+    
+    parser.add_argument(
+        "text_prompt", 
+        help="Text prompt to search for in the image (e.g., 'girl', 'car', 'person with hat')"
+    )
+    
+    parser.add_argument(
+        "output_path",
+        nargs="?",  # Optional argument
+        help="Path for the output image (optional - will auto-generate if not provided)"
+    )
+    
+    parser.add_argument(
+        "--cutout",
+        action="store_true",
+        help="Create transparent cutout instead of red mask overlay"
+    )
+    
+    parser.add_argument(
+        "--models-dir",
+        default=None,
+        help="Custom directory for storing models (optional)"
+    )
+    
+    args = parser.parse_args()
+    
+    print("[SEGMENT] Florence-2 + SAM2 Segmentation Pipeline")
     print("=" * 50)
     
+    # Validate input image
+    if not os.path.exists(args.image_path):
+        print(f"[ERROR] Input image not found: {args.image_path}")
+        sys.exit(1)
+    
+    # Determine output type
+    output_type = 'cutout' if args.cutout else 'overlay'
+    
+    # Show configuration
+    print(f"[INPUT] Input image: {args.image_path}")
+    print(f"[PROMPT] Text prompt: '{args.text_prompt}'")
+    print(f"[TYPE] Output type: {'Transparent cutout' if args.cutout else 'Red mask overlay'}")
+    if args.output_path:
+        print(f"[OUTPUT] Output path: {args.output_path}")
+    else:
+        suffix = "_cutout.png" if args.cutout else "_mask.jpg"
+        print(f"💾 Output path: Auto-generated ({suffix})")
+    
     # Show model storage location
-    models_dir = os.path.join("lazy_tools", "models")
-    print(f"📁 Models will be stored in: {os.path.abspath(models_dir)}")
+    if args.models_dir:
+        models_dir = args.models_dir
+    else:
+        models_dir = os.path.join(os.path.dirname(__file__), "models")
+    print(f"[MODELS] Models directory: {os.path.abspath(models_dir)}")
+    print()
     
     # Initialize pipeline
-    pipeline = FloSAM2Pipeline()
-    
-    # Test parameters
-    image_path = os.path.join("lazy_tools", "sam2_test_image", "1.jpg")
-    text_prompt = "katana"
-    
-    # Check if test image exists
-    if not os.path.exists(image_path):
-        print(f"❌ Test image not found: {image_path}")
-        print("Please ensure the image exists at the specified path")
-        return
-    
-    # Run the complete pipeline
-    pipeline.process_image(image_path, text_prompt)
+    try:
+        pipeline = FloSAM2Pipeline()
+        
+        # Run the complete pipeline
+        pipeline.process_image(args.image_path, args.text_prompt, args.output_path, output_type)
+        
+    except KeyboardInterrupt:
+        print("\n[STOP] Process interrupted by user")
+        sys.exit(0)
+    except Exception as e:
+        print(f"[ERROR] Pipeline initialization error: {e}")
+        sys.exit(1)
 
 
 if __name__ == "__main__":
