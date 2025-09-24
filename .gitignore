@@ -1,4 +1,5 @@
 __pycache__/
-
+lazy_tools/models/*
+.venv
 # Stop tracking scripts folder but keep existing files
 lazy_tools/scripts/
