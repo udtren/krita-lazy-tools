@@ -79,8 +79,8 @@ Compatibility with other environments is not guaranteed.
 
 4. **Download SAM2.1 Models**:
    Download the following checkpoints and place them in the `lazy_tools/models/` folder:
-   - [`sam2.1_hiera_base_plus.pt`](https://dl.fbaipublicfiles.com/segment_anything_2/092824/sam2.1_hiera_base_plus.pt) (1.1GB)
-   - [`sam2.1_hiera_large.pt`](https://dl.fbaipublicfiles.com/segment_anything_2/092824/sam2.1_hiera_large.pt) (2.3GB)
+   - [`sam2.1_hiera_base_plus.pt`](https://huggingface.co/facebook/sam2.1-hiera-base-plus/tree/main)
+   - [`sam2.1_hiera_large.pt`](https://huggingface.co/facebook/sam2.1-hiera-large/tree/main) 
 
    ```
    lazy_tools/
