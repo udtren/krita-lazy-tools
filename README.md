@@ -90,6 +90,12 @@ Compatibility with other environments is not guaranteed.
    │   └── florence-2-large-ft/ (auto-downloaded)
    ```
 
+5. **Configure Project Path**:
+   
+   Update the `PROJECT_DIR` variable in `lazy_tools\widgets\__init__.py` to point to your actual installation path.
+   PROJECT_DIR = r"C:\Users\YourName\AppData\Roaming\krita\pykrita\lazy_tools"
+
+
 ### 📊 Example Results
 
 ![Setting](./lazy_tools/images/seg_example1.png)
