@@ -15,7 +15,7 @@ from PyQt5.QtWidgets import (
     QDockWidget,
     QFrame,
 )
-from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtCore import QTimer
 from PyQt5.QtGui import QIcon, QPixmap, QColor
 from lazy_tools.widgets.color_filter_widgets import ColorFilterSection
 from lazy_tools.widgets.scripts_widgets import ScriptsSection
@@ -91,10 +91,51 @@ class CollapsibleSection(QWidget):
         self.content_frame.setVisible(not self.is_collapsed)
         self.update_header_text()
 
+        # Force immediate size recalculation
+        self.updateGeometry()
+        self.adjustSize()
+
+        # Find and update parent docker size more aggressively
+        parent_widget = self.parent()
+        while parent_widget:
+            parent_widget.updateGeometry()
+            if hasattr(parent_widget, "layout") and parent_widget.layout():
+                parent_widget.layout().invalidate()
+                parent_widget.layout().activate()
+
+            if isinstance(parent_widget, QDockWidget):
+                # Force the docker to resize by setting size policies and hints
+                parent_widget.updateGeometry()
+                parent_widget.adjustSize()
+
+                # Get the main widget and force it to recalculate
+                main_widget = parent_widget.widget()
+                if main_widget:
+                    main_widget.updateGeometry()
+                    main_widget.adjustSize()
+                break
+            parent_widget = parent_widget.parent()
+
     def update_header_text(self):
         """Update the header button text with collapse indicator."""
         arrow = "▼" if not self.is_collapsed else "▶"
         self.header_button.setText(f"{arrow} {self.title}")
+
+    def sizeHint(self):
+        """Return appropriate size hint based on collapsed state."""
+        if self.is_collapsed:
+            # Only return height for header button when collapsed
+            return self.header_button.sizeHint()
+        else:
+            # Return full size when expanded
+            return super().sizeHint()
+
+    def minimumSizeHint(self):
+        """Return minimum size hint based on collapsed state."""
+        if self.is_collapsed:
+            return self.header_button.minimumSizeHint()
+        else:
+            return super().minimumSizeHint()
 
 
 class LazyToolsDockerWidget(QDockWidget):
@@ -139,7 +180,7 @@ class LazyToolsDockerWidget(QDockWidget):
         main_layout.addWidget(self.scripts_section)
 
         # Add small stretch at the end to push content up slightly
-        # main_layout.addStretch(1)
+        main_layout.addStretch()
 
         main_widget.setLayout(main_layout)
         self.setWidget(main_widget)
