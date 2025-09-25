@@ -125,14 +125,14 @@ class LazyToolsDockerWidget(QDockWidget):
         self.add_control_buttons(main_layout)
 
         # Create collapsible AI Segmentation section
-        self.segment_section = CollapsibleSection("AI Segmentation", collapsed=True)
+        self.segment_section = CollapsibleSection("AI Segmentation")
         self.segment_content = SegmentSection(self)
         self.segment_section.set_content_widget(self.segment_content)
 
         main_layout.addWidget(self.segment_section)
 
-        # Create collapsible Scripts section (collapsed by default)
-        self.scripts_section = CollapsibleSection("Scripts", collapsed=True)
+        # Create collapsible Scripts section
+        self.scripts_section = CollapsibleSection("Scripts")
         self.scripts_content = ScriptsSection(self)
         self.scripts_section.set_content_widget(self.scripts_content)
 
