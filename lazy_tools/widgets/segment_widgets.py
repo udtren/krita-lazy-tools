@@ -254,8 +254,8 @@ class SegmentSection(QWidget):
                 background-color: #4CAF50;
                 color: white;
                 border: none;
-                padding: 8px;
-                border-radius: 4px;
+                padding: 2px;
+                border-radius: 1px;
                 font-weight: bold;
             }
             QPushButton:hover {
@@ -278,8 +278,8 @@ class SegmentSection(QWidget):
                 background-color: #f44336;
                 color: white;
                 border: none;
-                padding: 8px;
-                border-radius: 4px;
+                padding: 2px;
+                border-radius: 1px;
             }
             QPushButton:hover {
                 background-color: #d32f2f;

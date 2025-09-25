@@ -139,7 +139,7 @@ class LazyToolsDockerWidget(QDockWidget):
         main_layout.addWidget(self.scripts_section)
 
         # Add small stretch at the end to push content up slightly
-        main_layout.addStretch(1)
+        # main_layout.addStretch(1)
 
         main_widget.setLayout(main_layout)
         self.setWidget(main_widget)
