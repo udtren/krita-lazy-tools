@@ -79,15 +79,20 @@ class NameFilterSection(QWidget):
         # Get current node list
         current_nodes = self.generate_target_list(filter_pattern)
 
-        # Count occurrences of each node name
-        from collections import Counter
+        # Remove duplicates: keep only unique node names
+        seen_names = set()
+        unique_nodes = []
+        for node in current_nodes:
+            node_name = node.name()
+            if node_name not in seen_names:
+                seen_names.add(node_name)
+                unique_nodes.append(node)
 
-        current_node_names = Counter([node.name() for node in current_nodes])
-        existing_node_names = Counter(
-            [row.node_name for row in self.name_rows.values()]
-        )
+        # Get current unique node names and existing node names as sorted lists
+        current_node_names = sorted([node.name() for node in unique_nodes])
+        existing_node_names = sorted([row.node_name for row in self.name_rows.values()])
 
-        # If the node list hasn't changed (including duplicates), skip update
+        # If the node list hasn't changed, skip update
         if current_node_names == existing_node_names:
             return
 
@@ -99,7 +104,7 @@ class NameFilterSection(QWidget):
         self.name_rows.clear()
 
         # Add new widgets
-        for i, node in enumerate(current_nodes, start=0):
+        for i, node in enumerate(unique_nodes, start=0):
             name_row = NameFilterRow(node.name(), self.parent_docker)
             self.name_rows[i] = name_row
             self.node_rows_layout.addWidget(name_row)
