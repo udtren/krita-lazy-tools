@@ -76,6 +76,13 @@ class ColorFilterRow(QWidget):
         layout.setContentsMargins(2, 2, 2, 2)
         layout.setSpacing(2)
 
+        # Toggle visibility button
+        self.toggle_button = QPushButton("👁")
+        self.toggle_button.setFixedSize(30, 25)
+        self.toggle_button.setToolTip(f"Toggle visibility of {self.color_name} layers")
+        self.toggle_button.clicked.connect(self.toggle_visibility)
+        layout.addWidget(self.toggle_button)
+
         # Color icon label
         self.color_icon = QLabel()
         self.color_icon.setFixedSize(20, 20)
@@ -85,16 +92,8 @@ class ColorFilterRow(QWidget):
         self.color_icon.setToolTip(f"Color: {self.color_name}")
         layout.addWidget(self.color_icon)
 
-        # Toggle visibility button
-        self.toggle_button = QPushButton("👁")
-        self.toggle_button.setFixedSize(30, 25)
-        self.toggle_button.setToolTip(f"Toggle visibility of {self.color_name} layers")
-        self.toggle_button.clicked.connect(self.toggle_visibility)
-        layout.addWidget(self.toggle_button)
-
-        # Opacity buttons (0, 25, 50, 75, 100)
         self.opacity_buttons = {}
-        opacity_values = [0, 25, 50, 75, 100]
+        opacity_values = [10, 25, 50, 75, 100]
 
         for opacity in opacity_values:
             btn = QPushButton(str(opacity))

@@ -15,10 +15,126 @@ from PyQt5.QtWidgets import (
     QDockWidget,
     QFrame,
 )
-from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtCore import QTimer
 from PyQt5.QtGui import QIcon, QPixmap, QColor
 from lazy_tools.widgets.color_filter_widgets import ColorFilterSection
 from lazy_tools.widgets.scripts_widgets import ScriptsSection
+from lazy_tools.widgets.segment_widgets import SegmentSection
+from lazy_tools.widgets.name_filter_widgets import NameFilterSection
+import os
+
+
+class LazyToolsDockerWidget(QDockWidget):
+    """
+    Main docker widget for color-based layer filtering with opacity controls.
+    """
+
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Lazy Tools")
+        self.setup_ui()
+
+        # Setup timer to update UI every 1 second
+        self.update_timer = QTimer(self)
+        self.update_timer.timeout.connect(self.update_docker_size)
+        self.update_timer.start(2000)  # 1000 ms = 1 second
+
+    def setup_ui(self):
+        """Setup the main UI."""
+        main_widget = QWidget()
+        main_layout = QVBoxLayout()
+        main_layout.setContentsMargins(5, 5, 5, 5)
+        main_layout.setSpacing(5)
+
+        ##############################
+        # Create collapsible Color Filter section
+        ##############################
+
+        self.color_filter_section = CollapsibleSection("Color Filter", collapsed=True)
+        self.color_filter_content = ColorFilterSection(self)
+        self.color_filter_section.set_content_widget(self.color_filter_content)
+
+        main_layout.addWidget(self.color_filter_section)
+
+        ##############################
+        # Create collapsible Name Filter section
+        ##############################
+
+        self.name_filter_section = CollapsibleSection("Name Filter")
+        self.name_filter_content = NameFilterSection(self)
+        self.name_filter_section.set_content_widget(self.name_filter_content)
+
+        main_layout.addWidget(self.name_filter_section)
+
+        ##############################
+        # Check if .pt files exist in models directory before adding AI Segmentation section
+        ##############################
+        if self._has_pt_models():
+            self.segment_section = CollapsibleSection("AI Segmentation", collapsed=True)
+            self.segment_content = SegmentSection(self)
+            self.segment_section.set_content_widget(self.segment_content)
+            main_layout.addWidget(self.segment_section)
+
+        ##############################
+        # Create collapsible Scripts section
+        ##############################
+        self.scripts_section = CollapsibleSection("Scripts")
+        self.scripts_content = ScriptsSection(self)
+        self.scripts_section.set_content_widget(self.scripts_content)
+
+        main_layout.addWidget(self.scripts_section)
+
+        ##############################
+        # Add small stretch at the end to push content up slightly
+        main_layout.addStretch()
+
+        main_widget.setLayout(main_layout)
+        self.setWidget(main_widget)
+
+    def _has_pt_models(self):
+        try:
+            # Get the models directory path (lazy_tools/models)
+            models_dir = os.path.join(os.path.dirname(__file__), "models")
+
+            print(f"Checking models directory: {models_dir}")
+
+            # Check if directory exists
+            if not os.path.exists(models_dir):
+                print(f"Directory does not exist: {models_dir}")
+                return False
+            else:
+                print(f"Directory exists: {models_dir}")
+                return True
+
+        except Exception as e:
+            print(f"Error checking for .pt models: {e}")
+            return False
+
+    def update_docker_size(self):
+        # Force immediate size recalculation
+        self.updateGeometry()
+        self.adjustSize()
+
+        # Find and update parent docker size more aggressively
+        parent_widget = self.parent()
+        while parent_widget:
+            parent_widget.updateGeometry()
+            if hasattr(parent_widget, "layout") and parent_widget.layout():
+                parent_widget.layout().invalidate()
+                parent_widget.layout().activate()
+
+            if isinstance(parent_widget, QDockWidget):
+                # Force the docker to resize by setting size policies and hints
+                parent_widget.updateGeometry()
+                parent_widget.adjustSize()
+
+                # Get the main widget and force it to recalculate
+                main_widget = parent_widget.widget()
+                if main_widget:
+                    main_widget.updateGeometry()
+                    main_widget.adjustSize()
+                break
+            parent_widget = parent_widget.parent()
 
 
 class CollapsibleSection(QWidget):
@@ -46,14 +162,16 @@ class CollapsibleSection(QWidget):
             """
             QPushButton {
                 text-align: left;
-                padding: 5px;
+                padding: 1px;
                 border: 1px solid #888;
-                background-color: #555;
                 color: white;
+                font-size: 12px;
                 font-weight: bold;
+                color: #1b1918;
+                background-color: #6a6a6a;
             }
             QPushButton:hover {
-                background-color: #666;
+                background-color: #818181;
             }
         """
         )
@@ -67,7 +185,7 @@ class CollapsibleSection(QWidget):
         self.content_frame.setFrameStyle(QFrame.Box | QFrame.Raised)
         self.content_frame.setStyleSheet("QFrame { border: 1px solid #888; }")
         self.content_layout = QVBoxLayout()
-        self.content_layout.setContentsMargins(5, 5, 5, 5)
+        self.content_layout.setContentsMargins(1, 1, 1, 1)
         self.content_frame.setLayout(self.content_layout)
 
         self.main_layout.addWidget(self.content_frame)
@@ -75,6 +193,7 @@ class CollapsibleSection(QWidget):
 
         # Set initial visibility based on collapsed state
         self.content_frame.setVisible(not self.is_collapsed)
+        self.content_layout.addStretch()
 
     def set_content_widget(self, widget: QWidget):
         """Set the widget to be shown/hidden in this section."""
@@ -95,126 +214,21 @@ class CollapsibleSection(QWidget):
         arrow = "▼" if not self.is_collapsed else "▶"
         self.header_button.setText(f"{arrow} {self.title}")
 
+    def sizeHint(self):
+        """Return appropriate size hint based on collapsed state."""
+        if self.is_collapsed:
+            # Only return height for header button when collapsed
+            return self.header_button.sizeHint()
+        else:
+            # Return full size when expanded
+            return super().sizeHint()
 
-class LazyToolsDockerWidget(QDockWidget):
-    """
-    Main docker widget for color-based layer filtering with opacity controls.
-    """
-
-    def __init__(self):
-        super().__init__()
-        self.setWindowTitle("Lazy Tools")
-        self.setup_ui()
-
-    def setup_ui(self):
-        """Setup the main UI."""
-        main_widget = QWidget()
-        main_layout = QVBoxLayout()
-        main_layout.setContentsMargins(5, 5, 5, 5)
-        main_layout.setSpacing(5)
-
-        # Create collapsible Color Filter section
-        self.color_filter_section = CollapsibleSection("Color Filter")
-        self.color_filter_content = ColorFilterSection(self)
-        self.color_filter_section.set_content_widget(self.color_filter_content)
-
-        main_layout.addWidget(self.color_filter_section)
-
-        # Add control buttons directly below Color Filter section
-        self.add_control_buttons(main_layout)
-
-        # Create collapsible Scripts section (collapsed by default)
-        self.scripts_section = CollapsibleSection("Scripts", collapsed=True)
-        self.scripts_content = ScriptsSection(self)
-        self.scripts_section.set_content_widget(self.scripts_content)
-
-        main_layout.addWidget(self.scripts_section)
-
-        # Add small stretch at the end to push content up slightly
-        main_layout.addStretch(1)
-
-        main_widget.setLayout(main_layout)
-        self.setWidget(main_widget)
-
-    def add_control_buttons(self, layout: QVBoxLayout):
-        """Add control buttons for global operations."""
-        button_layout = QHBoxLayout()
-
-        # Show All button
-        show_all_btn = QPushButton("Show All")
-        show_all_btn.setToolTip("Make all layers visible")
-        show_all_btn.clicked.connect(self.show_all_layers)
-        button_layout.addWidget(show_all_btn)
-
-        # Reset Opacity button
-        reset_opacity_btn = QPushButton("Reset Opacity")
-        reset_opacity_btn.setToolTip("Set all layers opacity to 100%")
-        reset_opacity_btn.clicked.connect(self.reset_all_opacity)
-        button_layout.addWidget(reset_opacity_btn)
-
-        layout.addLayout(button_layout)
-
-    def show_all_layers(self):
-        """Make all layers visible."""
-        try:
-            doc = Krita.instance().activeDocument()
-            if doc:
-                root_node = doc.rootNode()
-                self._show_all_recursive(root_node)
-                doc.refreshProjection()
-                print("All layers are now visible")
-        except Exception as e:
-            print(f"Error showing all layers: {e}")
-
-    def reset_all_opacity(self):
-        """Reset all layers opacity to 100%."""
-        try:
-            doc = Krita.instance().activeDocument()
-            if doc:
-                root_node = doc.rootNode()
-                self._reset_opacity_recursive(root_node)
-                doc.refreshProjection()
-                print("All layers opacity reset to 100%")
-        except Exception as e:
-            print(f"Error resetting opacity: {e}")
-
-    def _show_all_recursive(self, node: Node):
-        """Recursively make all layers visible."""
-        if not node:
-            return
-
-        # Don't process the root node
-        if node.type() == "grouplayer" and node.parentNode() is None:
-            for child in node.childNodes():
-                self._show_all_recursive(child)
-            return
-
-        # Make layer visible
-        if node.type() in ["paintlayer", "grouplayer", "vectorlayer", "filterlayer"]:
-            node.setVisible(True)
-
-        # Process child nodes
-        for child in node.childNodes():
-            self._show_all_recursive(child)
-
-    def _reset_opacity_recursive(self, node: Node):
-        """Recursively reset opacity of all layers to 100%."""
-        if not node:
-            return
-
-        # Don't process the root node
-        if node.type() == "grouplayer" and node.parentNode() is None:
-            for child in node.childNodes():
-                self._reset_opacity_recursive(child)
-            return
-
-        # Reset opacity
-        if node.type() in ["paintlayer", "grouplayer", "vectorlayer", "filterlayer"]:
-            node.setOpacity(255)  # 255 = 100%
-
-        # Process child nodes
-        for child in node.childNodes():
-            self._reset_opacity_recursive(child)
+    def minimumSizeHint(self):
+        """Return minimum size hint based on collapsed state."""
+        if self.is_collapsed:
+            return self.header_button.minimumSizeHint()
+        else:
+            return super().minimumSizeHint()
 
 
 class LazyToolsDockerFactory(DockWidgetFactoryBase):

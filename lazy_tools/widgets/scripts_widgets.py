@@ -31,7 +31,19 @@ class ScriptsSection(QWidget):
         self.scripts_folder = os.path.join(
             os.path.dirname(os.path.dirname(__file__)), "scripts"
         )
+        self._ensure_scripts_folder_exists()
         self.setup_ui()
+
+    def _ensure_scripts_folder_exists(self):
+        """Create the scripts folder if it doesn't exist."""
+        try:
+            if not os.path.exists(self.scripts_folder):
+                os.makedirs(self.scripts_folder)
+                print(f"Created scripts folder: {self.scripts_folder}")
+            else:
+                print(f"Scripts folder exists: {self.scripts_folder}")
+        except Exception as e:
+            print(f"Error creating scripts folder: {e}")
 
     def setup_ui(self):
         """Setup the scripts section UI."""
@@ -44,6 +56,22 @@ class ScriptsSection(QWidget):
         reload_layout.setContentsMargins(0, 0, 0, 0)
 
         self.reload_btn = QPushButton("🔄 Reload Scripts")
+        self.reload_btn.setStyleSheet(
+            """
+            QPushButton {
+                text-align: left;
+                padding: 1px;
+                color: white;
+                font-size: 12px;
+                font-weight: bold;
+                color: #1b1918;
+                background-color: #6a6a6a;
+            }
+            QPushButton:hover {
+                background-color: #818181;
+            }
+        """
+        )
         self.reload_btn.setToolTip("Reload scripts list")
         self.reload_btn.clicked.connect(self._reload_scripts)
         reload_layout.addWidget(self.reload_btn)
@@ -52,21 +80,14 @@ class ScriptsSection(QWidget):
         layout.addLayout(reload_layout)
 
         # Scroll area for script buttons
-        self.scroll_area = QScrollArea()
-        self.scroll_area.setWidgetResizable(True)
-        self.scroll_area.setMaximumHeight(500)  # Limit height
-        self.scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarAsNeeded)
-        self.scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-
-        # Container widget for script buttons
         self.scripts_container = QWidget()
         self.scripts_layout = QVBoxLayout()
         self.scripts_layout.setContentsMargins(2, 2, 2, 2)
         self.scripts_layout.setSpacing(2)
         self.scripts_container.setLayout(self.scripts_layout)
 
-        self.scroll_area.setWidget(self.scripts_container)
-        layout.addWidget(self.scroll_area)
+        layout.addWidget(self.scripts_container)
+        layout.addStretch()
 
         self.setLayout(layout)
         self._populate_script_buttons()
@@ -83,7 +104,7 @@ class ScriptsSection(QWidget):
             # Show "No scripts found" message
             no_scripts_label = QLabel("No scripts found")
             no_scripts_label.setStyleSheet(
-                "QLabel { color: #888; font-style: italic; padding: 10px; }"
+                "QLabel { color: #7065a7; font-style: italic; padding: 10px; }"
             )
             no_scripts_label.setAlignment(Qt.AlignCenter)
             self.scripts_layout.addWidget(no_scripts_label)
@@ -96,17 +117,17 @@ class ScriptsSection(QWidget):
                     """
                     QPushButton {
                         text-align: left;
-                        padding: 5px 10px;
-                        border: 1px solid #666;
-                        background-color: #444;
-                        color: white;
+                        padding: 1px 1px;
+                        color: #7065a7; 
+                        background-color: #081a0b;
                     }
                     QPushButton:hover {
-                        background-color: #555;
-                        border-color: #888;
+                        color: #7065a7;
+                        background-color: #9c9c9c;
                     }
                     QPushButton:pressed {
-                        background-color: #333;
+                        color: #7065a7;
+                        background-color: #bababa;
                     }
                 """
                 )
