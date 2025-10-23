@@ -156,25 +156,12 @@ class SegmentSection(QWidget):
     def setup_ui(self):
         """Setup the segmentation section UI."""
         layout = QVBoxLayout()
-        layout.setContentsMargins(5, 5, 5, 5)
-        layout.setSpacing(8)
-
-        # # Title
-        # title_label = QLabel("🤖 AI Segmentation")
-        # title_font = QFont()
-        # title_font.setBold(True)
-        # title_label.setFont(title_font)
-        # layout.addWidget(title_label)
-
-        # # Description
-        # desc_label = QLabel("Use Florence-2 + SAM2 to segment objects in your image")
-        # desc_label.setStyleSheet("color: #666; font-size: 10px;")
-        # desc_label.setWordWrap(True)
-        # layout.addWidget(desc_label)
+        layout.setContentsMargins(1, 1, 1, 1)
+        layout.setSpacing(1)
 
         # Prompt input
         prompt_layout = QVBoxLayout()
-        prompt_layout.setSpacing(3)
+        prompt_layout.setSpacing(1)
 
         prompt_label = QLabel("Object to find:")
         prompt_layout.addWidget(prompt_label)
@@ -252,7 +239,7 @@ class SegmentSection(QWidget):
             """
             QPushButton {
                 background-color: #4CAF50;
-                color: white;
+                color: #000000;
                 border: none;
                 padding: 2px;
                 border-radius: 4px;
@@ -275,14 +262,14 @@ class SegmentSection(QWidget):
         self.cancel_button.setStyleSheet(
             """
             QPushButton {
-                background-color: #f44336;
-                color: white;
+                background-color: #797979;
+                color: #000000;
                 border: none;
                 padding: 2px;
                 border-radius: 4px;
             }
             QPushButton:hover {
-                background-color: #d32f2f;
+                background-color: #545454;
             }
             QPushButton:disabled {
                 background-color: #cccccc;

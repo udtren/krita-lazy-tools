@@ -13,6 +13,17 @@ A Krita plugin that adds layer management and automation tools.
 - Toggle visibility of layers/groups by color label
 - Click a color to show/hide all layers with that specific color label
 
+### Name Filtering
+![Name Filtering](./lazy_tools/images/2.png)
+- Toggle visibility of nodes by their name prefix
+- Default filter value is "_" (underscore)
+- Automatically updates the node list every second
+
+### AI Segmentation
+- AI-powered image segmentation using Florence-2 and SAM2.1
+- This feature is only available when the `lazy_tools/models` folder exists
+- See the [Florence-2 + SAM2.1 AI Segmentation](#florence-2--sam21-ai-segmentation) section below for setup and usage
+
 ### Script Execution
 - Execute custom Python scripts
 - Auto-discovery of `.py` files in the `lazy_tools/scripts/` folder
