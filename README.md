@@ -1,8 +1,6 @@
 # Krita Lazy Tools
 
 A Krita plugin that adds layer management and automation tools.
-
-For "Florence-2 + SAM2.1 AI Segmentation" function, use "sam2" branch.
 ![Setting](./lazy_tools/images/1.png)
 
 ## Features
