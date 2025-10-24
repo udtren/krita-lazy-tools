@@ -20,7 +20,7 @@ A Krita plugin that adds layer management and automation tools.
 - Default filter value is "_" (underscore)
 - Automatically updates the node list every second
 - The list is case-insensitive sorting
-- Click the name label will activate the first node whos name match the label
+- Click the name label will activate the first node whose name matchs the label
 
 ### AI Segmentation
 - AI-powered image segmentation using Florence-2 and SAM2.1
