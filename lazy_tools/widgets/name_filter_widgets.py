@@ -178,6 +178,16 @@ class NameFilterRow(QWidget):
         self.toggle_button = QPushButton("👁")
         self.toggle_button.setFixedSize(30, 25)
         self.toggle_button.clicked.connect(self.toggle_visibility)
+        self.toggle_button.setStyleSheet(
+            """
+            QPushButton {
+                background-color: #191919;
+            }
+            QPushButton:hover {
+                background-color: #393939;
+            }
+        """
+        )
         main_layout.addWidget(self.toggle_button)
 
         # node name label
