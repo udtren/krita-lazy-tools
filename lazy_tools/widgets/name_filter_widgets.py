@@ -35,8 +35,8 @@ class NameFilterSection(QWidget):
         filter_label.setStyleSheet(
             "font-size: 14px; "
             "font-weight: bold;"
-            "color: #7065a7; "
-            "background-color: #081a0b;"
+            "color: #a3a3a3; "
+            "background-color: #191919;"
         )
         filter_label.setFixedWidth(60)
         filter_row.addWidget(filter_label)
@@ -165,8 +165,8 @@ class NameFilterRow(QWidget):
         self.node_name_label.setStyleSheet(
             "font-size: 16px; "
             "font-weight: bold;"
-            "color: #7065a7; "
-            "background-color: #081a0b;"
+            "color: #a3a3a3; "
+            "background-color: #191919;"
         )
         first_row.addWidget(self.node_name_label)
 

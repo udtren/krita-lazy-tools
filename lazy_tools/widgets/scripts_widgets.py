@@ -118,16 +118,16 @@ class ScriptsSection(QWidget):
                     QPushButton {
                         text-align: left;
                         padding: 1px 1px;
-                        color: #7065a7; 
-                        background-color: #081a0b;
+                        color: #a3a3a3; 
+                        background-color: #191919;
                     }
                     QPushButton:hover {
-                        color: #7065a7;
-                        background-color: #9c9c9c;
+                        color: #a3a3a3;
+                        background-color: #333333;
                     }
                     QPushButton:pressed {
-                        color: #7065a7;
-                        background-color: #bababa;
+                        color: #a3a3a3;
+                        background-color: #555555;
                     }
                 """
                 )
