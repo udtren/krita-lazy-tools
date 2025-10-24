@@ -8,8 +8,8 @@ from PyQt5.QtWidgets import (
     QLabel,
     QLineEdit,
 )
-from PyQt5.QtCore import Qt, QTimer
-from PyQt5.QtGui import QPixmap, QColor
+from PyQt5.QtCore import Qt, QTimer, QPoint
+from PyQt5.QtGui import QPixmap, QColor, QCursor
 from lazy_tools.utils.color_scheme import ColorScheme
 
 # from lazy_tools.utils.logs import write_log
@@ -23,6 +23,7 @@ class NameFilterSection(QWidget):
         self.name_rows: Dict[int, "NameFilterRow"] = {}
         self.use_prefix_match = use_prefix_match
         self.default_filter = default_filter
+        self.total_node_count = 0
 
         # Main layout
         main_layout = QVBoxLayout()
@@ -81,6 +82,12 @@ class NameFilterSection(QWidget):
         # Get current node list
         current_nodes = self.generate_target_list(filter_pattern)
 
+        # Count nodes by name
+        name_counts = {}
+        for node in current_nodes:
+            node_name = node.name()
+            name_counts[node_name] = name_counts.get(node_name, 0) + 1
+
         # Remove duplicates: keep only unique node names
         seen_names = set()
         unique_nodes = []
@@ -97,7 +104,10 @@ class NameFilterSection(QWidget):
         existing_node_names = sorted([row.node_name for row in self.name_rows.values()])
 
         # If the node list hasn't changed, skip update
-        if current_node_names == existing_node_names:
+        if (
+            current_node_names == existing_node_names
+            and len(current_nodes) == self.total_node_count
+        ):
             return
 
         # Clear existing widgets
@@ -109,9 +119,13 @@ class NameFilterSection(QWidget):
 
         # Add new widgets
         for i, node in enumerate(unique_nodes, start=0):
-            name_row = NameFilterRow(node.name(), self.parent_docker)
+            node_name = node.name()
+            count = name_counts.get(node_name, 1)
+            name_row = NameFilterRow(node_name, self.parent_docker, node_count=count)
             self.name_rows[i] = name_row
             self.node_rows_layout.addWidget(name_row)
+
+        self.total_node_count = len(current_nodes)
 
     def generate_target_list(self, filter_pattern="_"):
         targetNodes = []
@@ -146,28 +160,25 @@ class NameFilterSection(QWidget):
 
 class NameFilterRow(QWidget):
 
-    def __init__(self, node_name: str, parent=None):
+    def __init__(self, node_name: str, parent=None, node_count: int = 0):
         super().__init__(parent)
         self.node_name = node_name
         self.parent_docker = parent
+        self.node_count = node_count
 
         self.setup_ui()
 
     def setup_ui(self):
-        # Main vertical layout to hold two rows
-        main_layout = QVBoxLayout()
+        # Main layout - single row
+        main_layout = QHBoxLayout()
         main_layout.setContentsMargins(1, 1, 1, 1)
         main_layout.setSpacing(1)
-
-        # First row - node name and toggle button
-        first_row = QHBoxLayout()
-        first_row.setSpacing(1)
 
         # Toggle visibility button
         self.toggle_button = QPushButton("👁")
         self.toggle_button.setFixedSize(30, 25)
         self.toggle_button.clicked.connect(self.toggle_visibility)
-        first_row.addWidget(self.toggle_button)
+        main_layout.addWidget(self.toggle_button)
 
         # node name label
         self.node_name_label = QLabel(self.node_name)
@@ -181,42 +192,40 @@ class NameFilterRow(QWidget):
         )
         # Make label clickable
         self.node_name_label.mousePressEvent = self.on_label_clicked
-        first_row.addWidget(self.node_name_label)
+        main_layout.addWidget(self.node_name_label)
+
+        # display the node number of layers with this name
+        self.node_count_label = QLabel(str(self.node_count))
+        self.node_count_label.setStyleSheet(
+            "font-size: 14px; "
+            "font-weight: bold;"
+            "color: #6c7fd7; "
+            "background-color: #000000;"
+        )
+        main_layout.addWidget(self.node_count_label)
 
         # Add stretch to push everything to the left
-        first_row.addStretch()
-
-        # Second row - opacity buttons
-        second_row = QHBoxLayout()
-        second_row.setSpacing(1)
-
-        self.opacity_buttons = {}
-        opacity_values = [10, 25, 50, 75, 100]
-
-        for opacity in opacity_values:
-            btn = QPushButton(str(opacity))
-            btn.setFixedSize(25, 25)
-            btn.clicked.connect(lambda checked, op=opacity: self.set_opacity(op))
-            self.opacity_buttons[opacity] = btn
-            second_row.addWidget(btn)
-
-        # Add stretch to push everything to the left
-        second_row.addStretch()
-
-        # Add both rows to main layout
-        main_layout.addLayout(first_row)
-        main_layout.addLayout(second_row)
+        main_layout.addStretch()
 
         self.setLayout(main_layout)
 
     def on_label_clicked(self, event):
-        """Handle clicks on the label: regular click activates, Ctrl+right click removes."""
+        """Handle clicks on the label: Shift+click shows opacity popup, Ctrl+right click removes."""
         from PyQt5.QtCore import Qt
+        from PyQt5.QtGui import QCursor
 
         try:
+            # Check if it's Shift+click
+            if event.modifiers() & Qt.ShiftModifier:
+                # Show opacity popup at cursor position
+                cursor_pos = QCursor.pos()
+                self.opacity_popup = OpacityPopup(self, cursor_pos)
+                self.opacity_popup.show()
             # Check if it's Ctrl+right click
-            if (event.button() == Qt.RightButton and
-                event.modifiers() & Qt.ControlModifier):
+            elif (
+                event.button() == Qt.RightButton
+                and event.modifiers() & Qt.ControlModifier
+            ):
                 self.remove_first_node()
             else:
                 # Regular click - activate the node
@@ -387,3 +396,67 @@ class NameFilterRow(QWidget):
             # Fallback to manual visibility toggle
             current_visibility = node.visible()
             node.setVisible(not current_visibility)
+
+
+class OpacityPopup(QWidget):
+    """Popup window that shows opacity buttons and auto-closes after 3 seconds."""
+
+    def __init__(self, parent_row, cursor_pos):
+        super().__init__(None)  # No parent to make it a top-level window
+        self.parent_row = parent_row
+        self.setWindowFlags(Qt.Popup | Qt.FramelessWindowHint)
+        self.setAttribute(Qt.WA_DeleteOnClose)
+
+        # Setup UI
+        layout = QHBoxLayout()
+        layout.setContentsMargins(5, 5, 5, 5)
+        layout.setSpacing(5)
+
+        opacity_values = [10, 25, 50, 75, 100]
+
+        for opacity in opacity_values:
+            btn = QPushButton(str(opacity))
+            btn.setFixedSize(40, 30)
+            btn.clicked.connect(lambda checked, op=opacity: self.on_opacity_clicked(op))
+            layout.addWidget(btn)
+
+        self.setLayout(layout)
+
+        # Style the popup
+        self.setStyleSheet(
+            """
+            QWidget {
+                background-color: #2b2b2b;
+                border: 2px solid #555555;
+                border-radius: 5px;
+            }
+            QPushButton {
+                background-color: #3c3c3c;
+                color: #ffffff;
+                border: 1px solid #555555;
+                border-radius: 3px;
+                font-size: 14px;
+                font-weight: bold;
+            }
+            QPushButton:hover {
+                background-color: #4c4c4c;
+            }
+            QPushButton:pressed {
+                background-color: #5c5c5c;
+            }
+        """
+        )
+
+        # Position at cursor
+        self.move(cursor_pos)
+
+        # Setup auto-close timer (3 seconds)
+        self.close_timer = QTimer(self)
+        self.close_timer.timeout.connect(self.close)
+        self.close_timer.setSingleShot(True)
+        self.close_timer.start(3000)  # 3000 ms = 3 seconds
+
+    def on_opacity_clicked(self, opacity):
+        """Handle opacity button click."""
+        self.parent_row.set_opacity(opacity)
+        self.close()

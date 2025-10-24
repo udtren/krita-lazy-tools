@@ -23,9 +23,11 @@ Filter and manage layers by name with powerful matching options and quick action
   - **Any Match**: Filter layers containing the pattern anywhere (e.g., "bg" matches "bg_layer", "layer_bg", "debug")
 - Node list updates automatically every second
 - Layers sorted alphabetically regardless of case
+- Display the count nodes with same name
 - **Quick Actions:**
-  - **Click** the name label to activate the first matching node
+  - **Left  Click** the name label to activate the first matching node
   - **Ctrl + Right Click** the name label to remove the first matching node
+  - **Shift + Left Click** the name label to change the opacity
 - **Visibility Toggle**: Eye icon (👁) to show/hide all layers with that name
 - **Opacity Controls**: Quick buttons to set opacity to 10%, 25%, 50%, 75%, or 100%
 
