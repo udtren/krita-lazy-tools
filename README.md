@@ -27,9 +27,8 @@ Filter and manage layers by name with powerful matching options and quick action
 - **Quick Actions:**
   - **Left  Click** the name label to activate the first matching node
   - **Ctrl + Right Click** the name label to remove the first matching node
-  - **Shift + Left Click** the name label to change the opacity
+  - **Shift + Left Click** the name label to set opacity to 10%, 25%, 50%, 75%, or 100%
 - **Visibility Toggle**: Eye icon (👁) to show/hide all layers with that name
-- **Opacity Controls**: Quick buttons to set opacity to 10%, 25%, 50%, 75%, or 100%
 
 ### AI Segmentation
 - AI-powered image segmentation using Florence-2 and SAM2.1
