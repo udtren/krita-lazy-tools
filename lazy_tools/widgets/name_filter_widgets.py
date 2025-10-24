@@ -17,10 +17,12 @@ from lazy_tools.utils.color_scheme import ColorScheme
 
 class NameFilterSection(QWidget):
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, use_prefix_match=True, default_filter="_"):
         super().__init__(parent)
         self.parent_docker = parent
         self.name_rows: Dict[int, "NameFilterRow"] = {}
+        self.use_prefix_match = use_prefix_match
+        self.default_filter = default_filter
 
         # Main layout
         main_layout = QVBoxLayout()
@@ -41,9 +43,9 @@ class NameFilterSection(QWidget):
         filter_label.setFixedWidth(60)
         filter_row.addWidget(filter_label)
 
-        # Create text input with default value "_"
+        # Create text input with default value
         self.filter_input = QLineEdit()
-        self.filter_input.setText("_")
+        self.filter_input.setText(self.default_filter)
         self.filter_input.setPlaceholderText("Enter filter pattern...")
         self.filter_input.textChanged.connect(self.on_filter_changed)
         filter_row.addWidget(self.filter_input)
@@ -118,8 +120,15 @@ class NameFilterSection(QWidget):
             return targetNodes
         root = doc.rootNode()
         for node in self.get_all_nodes(root):
-            if node.name().startswith(filter_pattern):
-                targetNodes.append(node)
+            node_name = node.name()
+            if self.use_prefix_match:
+                # Prefix match: node name starts with the filter pattern
+                if node_name.startswith(filter_pattern) and filter_pattern != "":
+                    targetNodes.append(node)
+            else:
+                # Any match: filter pattern appears anywhere in node name
+                if filter_pattern in node_name and filter_pattern != "":
+                    targetNodes.append(node)
         return targetNodes
 
     def get_all_nodes(self, node):
@@ -200,19 +209,27 @@ class NameFilterRow(QWidget):
 
         self.setLayout(main_layout)
 
-    def on_label_clicked(self, event):  # noqa: ARG002
-        """Activate the first node with this name when label is clicked."""
+    def on_label_clicked(self, event):
+        """Handle clicks on the label: regular click activates, Ctrl+right click removes."""
+        from PyQt5.QtCore import Qt
+
+        try:
+            # Check if it's Ctrl+right click
+            if (event.button() == Qt.RightButton and
+                event.modifiers() & Qt.ControlModifier):
+                self.remove_first_node()
+            else:
+                # Regular click - activate the node
+                self.activate_first_node()
+
+        except Exception as e:
+            print(f"Error handling label click for {self.node_name}: {e}")
+
+    def activate_first_node(self):
+        """Activate the first node with this name."""
         try:
             doc = Krita.instance().activeDocument()
             if not doc:
-                return
-
-            window = Krita.instance().activeWindow()
-            if not window:
-                return
-
-            view = window.activeView()
-            if not view:
                 return
 
             # Find the first node with this name
@@ -228,6 +245,32 @@ class NameFilterRow(QWidget):
 
         except Exception as e:
             print(f"Error activating node {self.node_name}: {e}")
+
+    def remove_first_node(self):
+        """Remove the first node with this name."""
+        try:
+            doc = Krita.instance().activeDocument()
+            if not doc:
+                return
+
+            # Find the first node with this name
+            root_node = doc.rootNode()
+            target_node = self._find_first_node_by_name(root_node, self.node_name)
+
+            if target_node:
+                # Remove the node
+                parent = target_node.parentNode()
+                if parent:
+                    parent.removeChildNode(target_node)
+                    doc.refreshProjection()
+                    print(f"Removed node: {self.node_name}")
+                else:
+                    print(f"Cannot remove root node: {self.node_name}")
+            else:
+                print(f"No node found with name: {self.node_name}")
+
+        except Exception as e:
+            print(f"Error removing node {self.node_name}: {e}")
 
     def _find_first_node_by_name(self, node: Node, target_name: str):
         """Recursively find the first node with the target name."""

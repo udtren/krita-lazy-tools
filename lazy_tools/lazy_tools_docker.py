@@ -57,14 +57,28 @@ class LazyToolsDockerWidget(QDockWidget):
         main_layout.addWidget(self.color_filter_section)
 
         ##############################
-        # Create collapsible Name Filter section
+        # Create collapsible Name Filter (Prefix) section
         ##############################
 
-        self.name_filter_section = CollapsibleSection("Name Filter")
-        self.name_filter_content = NameFilterSection(self)
+        self.name_filter_section = CollapsibleSection("Name Filter (Prefix)")
+        self.name_filter_content = NameFilterSection(
+            self, default_filter="_", use_prefix_match=True
+        )
         self.name_filter_section.set_content_widget(self.name_filter_content)
 
         main_layout.addWidget(self.name_filter_section)
+
+        ##############################
+        # Create collapsible Name Filter  section
+        ##############################
+
+        self.name_filter_section2 = CollapsibleSection("Name Filter (Any)")
+        self.name_filter_content2 = NameFilterSection(
+            self, default_filter="", use_prefix_match=False
+        )
+        self.name_filter_section2.set_content_widget(self.name_filter_content2)
+
+        main_layout.addWidget(self.name_filter_section2)
 
         ##############################
         # Check if .pt files exist in models directory before adding AI Segmentation section

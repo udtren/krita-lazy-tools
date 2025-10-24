@@ -15,12 +15,19 @@ A Krita plugin that adds layer management and automation tools.
 - Click a color to show/hide all layers with that specific color label
 
 ### Name Filtering
-![Name Filtering](./lazy_tools/images/2.png)
-- Toggle visibility of nodes by their name prefix
-- Default filter value is "_" (underscore)
-- Automatically updates the node list every second
-- The list is case-insensitive sorting
-- Click the name label will activate the first node whose name matchs the label
+Filter and manage layers by name with powerful matching options and quick actions.
+
+**Features:**
+- **Two Matching Modes:**
+  - **Prefix Match**: Filter layers that start with the pattern (e.g., "bg_" matches "bg_layer", "bg_sky")
+  - **Any Match**: Filter layers containing the pattern anywhere (e.g., "bg" matches "bg_layer", "layer_bg", "debug")
+- Node list updates automatically every second
+- Layers sorted alphabetically regardless of case
+- **Quick Actions:**
+  - **Click** the name label to activate the first matching node
+  - **Ctrl + Right Click** the name label to remove the first matching node
+- **Visibility Toggle**: Eye icon (👁) to show/hide all layers with that name
+- **Opacity Controls**: Quick buttons to set opacity to 10%, 25%, 50%, 75%, or 100%
 
 ### AI Segmentation
 - AI-powered image segmentation using Florence-2 and SAM2.1
