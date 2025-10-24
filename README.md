@@ -15,9 +15,6 @@ A Krita plugin that adds layer management and automation tools.
 - Click a color to show/hide all layers with that specific color label
 
 ### Name Filtering
-Filter and manage layers by name with powerful matching options and quick actions.
-
-**Features:**
 - **Two Matching Modes:**
   - **Prefix Match**: Filter layers that start with the pattern (e.g., "bg_" matches "bg_layer", "bg_sky")
   - **Any Match**: Filter layers containing the pattern anywhere (e.g., "bg" matches "bg_layer", "layer_bg")
