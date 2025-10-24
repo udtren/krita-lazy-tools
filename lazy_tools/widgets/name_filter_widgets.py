@@ -88,6 +88,8 @@ class NameFilterSection(QWidget):
                 seen_names.add(node_name)
                 unique_nodes.append(node)
 
+        unique_nodes = sorted(unique_nodes, key=lambda node: node.name().lower())
+
         # Get current unique node names and existing node names as sorted lists
         current_node_names = sorted([node.name() for node in unique_nodes])
         existing_node_names = sorted([row.node_name for row in self.name_rows.values()])
@@ -168,6 +170,8 @@ class NameFilterRow(QWidget):
             "color: #a3a3a3; "
             "background-color: #191919;"
         )
+        # Make label clickable
+        self.node_name_label.mousePressEvent = self.on_label_clicked
         first_row.addWidget(self.node_name_label)
 
         # Add stretch to push everything to the left
@@ -195,6 +199,60 @@ class NameFilterRow(QWidget):
         main_layout.addLayout(second_row)
 
         self.setLayout(main_layout)
+
+    def on_label_clicked(self, event):  # noqa: ARG002
+        """Activate the first node with this name when label is clicked."""
+        try:
+            doc = Krita.instance().activeDocument()
+            if not doc:
+                return
+
+            window = Krita.instance().activeWindow()
+            if not window:
+                return
+
+            view = window.activeView()
+            if not view:
+                return
+
+            # Find the first node with this name
+            root_node = doc.rootNode()
+            target_node = self._find_first_node_by_name(root_node, self.node_name)
+
+            if target_node:
+                # Set this node as the active/current node
+                doc.setActiveNode(target_node)
+                print(f"Activated node: {self.node_name}")
+            else:
+                print(f"No node found with name: {self.node_name}")
+
+        except Exception as e:
+            print(f"Error activating node {self.node_name}: {e}")
+
+    def _find_first_node_by_name(self, node: Node, target_name: str):
+        """Recursively find the first node with the target name."""
+        if not node:
+            return None
+
+        # Don't check the root node
+        if node.type() == "grouplayer" and node.parentNode() is None:
+            for child in node.childNodes():
+                result = self._find_first_node_by_name(child, target_name)
+                if result:
+                    return result
+            return None
+
+        # Check if this node matches
+        if node.name() == target_name:
+            return node
+
+        # Check child nodes
+        for child in node.childNodes():
+            result = self._find_first_node_by_name(child, target_name)
+            if result:
+                return result
+
+        return None
 
     def toggle_visibility(self):
         """Toggle visibility of all layers with this color label."""
