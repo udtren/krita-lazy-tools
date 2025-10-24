@@ -1,6 +1,7 @@
 # Krita Lazy Tools
 
 A Krita plugin that adds layer management and automation tools.
+
 ![Setting](./lazy_tools/images/1.png)
 
 ## Features
