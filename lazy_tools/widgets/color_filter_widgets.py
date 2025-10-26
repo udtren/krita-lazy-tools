@@ -176,11 +176,13 @@ class ColorFilterRow(QWidget):
             return
 
         # Check if this layer has the target color label
-        if node.type() in ["paintlayer", "grouplayer", "vectorlayer", "filterlayer"]:
+        try:
             layer_color = node.colorLabel()
 
             if layer_color == self.color_index:
                 node.setOpacity(opacity_value)
+        except Exception as e:
+            print(f"Error setting opacity for {node.name()}: {e}")
 
         # Process child nodes
         for child in node.childNodes():

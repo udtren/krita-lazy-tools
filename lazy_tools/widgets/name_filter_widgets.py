@@ -373,13 +373,12 @@ class NameFilterRow(QWidget):
             return
 
         # Check if this layer has the target name and type is correct
-        if node.name() == self.node_name and node.type() in [
-            "paintlayer",
-            "grouplayer",
-            "vectorlayer",
-            "filterlayer",
-        ]:
-            node.setOpacity(opacity_value)
+        if node.name() == self.node_name:
+            try:
+                # Set opacity
+                node.setOpacity(opacity_value)
+            except Exception as e:
+                print(f"Error setting opacity for {node.name()}: {e}")
 
         # Process child nodes
         for child in node.childNodes():
