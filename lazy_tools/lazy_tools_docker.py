@@ -50,7 +50,7 @@ class LazyToolsDockerWidget(QDockWidget):
         # Create collapsible Color Filter section
         ##############################
 
-        self.color_filter_section = CollapsibleSection("Color Filter", collapsed=True)
+        self.color_filter_section = CollapsibleSection("Color Filter", collapsed=False)
         self.color_filter_content = ColorFilterSection(self)
         self.color_filter_section.set_content_widget(self.color_filter_content)
 

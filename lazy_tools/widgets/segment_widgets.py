@@ -207,7 +207,7 @@ class SegmentSection(QWidget):
 
         self.output_type_group = QButtonGroup()
 
-        self.overlay_radio = QRadioButton("🎭 Red Overlay")
+        self.overlay_radio = QRadioButton("Red Overlay")
         self.overlay_radio.setChecked(
             DEFAULT_OUTPUT_TYPE == "overlay"
         )  # Use config default
@@ -217,7 +217,7 @@ class SegmentSection(QWidget):
         self.output_type_group.addButton(self.overlay_radio, 0)
         radio_layout.addWidget(self.overlay_radio)
 
-        self.cutout_radio = QRadioButton("✂️ Transparent Cutout")
+        self.cutout_radio = QRadioButton("Transparent Cutout")
         self.cutout_radio.setChecked(
             DEFAULT_OUTPUT_TYPE == "cutout"
         )  # Use config default

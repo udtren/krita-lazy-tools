@@ -11,8 +11,9 @@ A Krita plugin that adds layer management and automation tools.
 - Updating a group will not change its children's color labels
 
 ### Color Filtering
-- Toggle visibility of layers/groups by color label
-- Click a color to show/hide all layers with that specific color label
+- **Visibility Toggle**: Eye icon (👁) to show/hide all layers with that color
+- **Quick Actions:**
+   - **Shift + Left Click** the color label to set opacity to 10%, 25%, 50%, 75%, or 100%
 
 ### Name Filtering
 - **Two Matching Modes:**
@@ -113,9 +114,3 @@ Compatibility with other environments is not guaranteed.
    
    Update the `PROJECT_DIR` variable in `lazy_tools\widgets\__init__.py` to point to your actual installation path.
    PROJECT_DIR = r"C:\Users\YourName\AppData\Roaming\krita\pykrita\lazy_tools"
-
-
-### 📊 Example Results
-
-![Setting](./lazy_tools/images/seg_example1.png)
-![Setting](./lazy_tools/images/seg_example2.png)

@@ -47,7 +47,6 @@ class NameFilterSection(QWidget):
         # Create text input with default value
         self.filter_input = QLineEdit()
         self.filter_input.setText(self.default_filter)
-        self.filter_input.setPlaceholderText("Enter filter pattern...")
         self.filter_input.textChanged.connect(self.on_filter_changed)
         filter_row.addWidget(self.filter_input)
 
