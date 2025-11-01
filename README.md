@@ -76,6 +76,19 @@ Go to `Settings > Configure Krita > Keyboard Shortcuts` and search for:
 - "Add New Layer Alternative"
 - "Duplicate Layer Alternative"
 
+### Color Pick from Anywhere
+
+Pick colors from anywhere on your screen (including other apps like PureRef) using a global hotkey.
+
+- Instant color sampling from any application
+- Sets the picked color as your foreground color in Krita
+
+**Hotkey:** `Win + Shift + C`
+
+**Platform:** Windows only
+
+**Note:** If you don't need this feature, remove the line `from .e_scripts.color_pick import *` from `__init__.py` to disable it.
+
 ## Florence-2 + SAM2.1 AI Segmentation
 
 ### Key Features

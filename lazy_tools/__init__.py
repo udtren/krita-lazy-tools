@@ -5,6 +5,7 @@ from .lazy_scripts import LazyScripts
 from .lazy_tools_docker import LazyToolsDockerFactory
 from .e_scripts.duplicate import *
 from .e_scripts.new_layer import *
+from .e_scripts.color_pick import *
 
 
 class LazyToolsExtension(Extension):
