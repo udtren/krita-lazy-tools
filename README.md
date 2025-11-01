@@ -38,7 +38,7 @@ A Krita plugin that adds layer management and automation tools.
 - Auto-discovery of `.py` files in the `lazy_tools/scripts/` folder
 - "Reload Scripts" option for dynamic script development
 
-## New Actions
+## Custom Actions
 A collection of scripts to speed up workflow.
 
 ### Add New Layer
