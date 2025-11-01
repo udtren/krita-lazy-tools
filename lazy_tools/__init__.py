@@ -3,6 +3,8 @@ from .lazy_color import LazyColorLabel
 from .lazy_color_filter import LazyColorFilter
 from .lazy_scripts import LazyScripts
 from .lazy_tools_docker import LazyToolsDockerFactory
+from .e_scripts.duplicate import *
+from .e_scripts.new_layer import *
 
 
 class LazyToolsExtension(Extension):

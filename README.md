@@ -38,6 +38,43 @@ A Krita plugin that adds layer management and automation tools.
 - Auto-discovery of `.py` files in the `lazy_tools/scripts/` folder
 - "Reload Scripts" option for dynamic script development
 
+## New Actions
+A collection of scripts to speed up workflow.
+
+### Add New Layer
+![alt text](lazy_tools/images/new_layer.png)
+
+Opens a dialog to create a new layer with options:
+
+**Layer Types:**
+- Paint layer
+- Group layer
+- Fill layer(Foreground Color)
+
+**Options:**
+- **Layer Name** - Leave empty to auto-generate (e.g. `Paint-a3f2`, `Group-7b4c`)
+- **Blending Mode** - Choose from a list or type your own
+- **Add Below** - Creates the layer below the active layer instead of above
+- **Add As Child** - If active layer is a group, creates the layer inside that group
+- **Inherit Alpha** - Enable alpha inheritance
+- **Pass Through** - Enable pass-through mode (for group layers)
+
+### Duplicate Layer
+![alt text](lazy_tools/images/duplicate.png)
+
+Duplicates the active layer with options:
+
+**Options:**
+- **Layer Name** - Edit the name of the duplicated layer
+- **Blending Mode** - Change blending mode (for paint layer)
+- **Hide Original** - Hides the original layer after duplicating
+
+### Usage
+
+Go to `Settings > Configure Krita > Keyboard Shortcuts` and search for:
+- "Add New Layer Alternative"
+- "Duplicate Layer Alternative"
+
 ## Florence-2 + SAM2.1 AI Segmentation
 
 ### Key Features
