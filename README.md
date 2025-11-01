@@ -68,6 +68,7 @@ Duplicates the active layer with options:
 - **Layer Name** - Edit the name of the duplicated layer
 - **Blending Mode** - Change blending mode (for paint layer)
 - **Hide Original** - Hides the original layer after duplicating
+- **Add to Group** - Create a new group and move layers into it
 
 ### Usage
 

@@ -61,6 +61,11 @@ class DuplicateLayerDialog(QDialog):
         self.hide_original_checkbox.setChecked(False)
         layout.addWidget(self.hide_original_checkbox)
 
+        # Add to Group
+        self.add_to_group_checkbox = QCheckBox("add to group")
+        self.add_to_group_checkbox.setChecked(False)
+        layout.addWidget(self.add_to_group_checkbox)
+
         # Buttons
         button_layout = QHBoxLayout()
         ok_button = QPushButton("OK")
@@ -78,8 +83,9 @@ class DuplicateLayerDialog(QDialog):
         node_name = self.name_input.text().strip()
         blending_mode = self.blending_mode_combo.currentText()
         hide_original = self.hide_original_checkbox.isChecked()
+        add_to_group = self.add_to_group_checkbox.isChecked()
 
-        return (node_name, blending_mode, hide_original)
+        return (node_name, blending_mode, hide_original, add_to_group)
 
 
 class DuplicateLayerExtension(Extension):
@@ -108,11 +114,13 @@ class DuplicateLayerExtension(Extension):
             )
             if dialog.exec_() == QDialog.Accepted:
                 # Get values from dialog
-                (node_name, blending_mode, hide_original) = dialog.get_values()
+                (node_name, blending_mode, hide_original, add_to_group) = (
+                    dialog.get_values()
+                )
 
                 current_layer = doc.activeNode()
-
                 duplicated_layer = current_layer.duplicate()
+
                 if duplicated_layer:
                     parent = current_layer.parentNode()
                     if parent:
@@ -125,6 +133,24 @@ class DuplicateLayerExtension(Extension):
 
                         doc.setActiveNode(duplicated_layer)
                         doc.refreshProjection()
+
+                        if add_to_group:
+                            # Create a new group layer
+                            myGroup = doc.createGroupLayer(node_name)
+
+                            # Add the group at the position of the duplicated layer
+                            parent.addChildNode(myGroup, duplicated_layer)
+
+                            # Remove both layers from their current parent
+                            parent.removeChildNode(current_layer)
+                            parent.removeChildNode(duplicated_layer)
+
+                            # Add both layers into the group
+                            myGroup.addChildNode(current_layer, None)
+                            myGroup.addChildNode(duplicated_layer, current_layer)
+
+                            doc.setActiveNode(duplicated_layer)
+                            doc.refreshProjection()
                     else:
                         print("Could not find parent node")
 
