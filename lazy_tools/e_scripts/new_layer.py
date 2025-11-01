@@ -218,6 +218,17 @@ class AddNewLayerExtension(Extension):
                                 # Insert below by adding at the position of the node below
                                 below_node = child_nodes[active_index - 1]
                                 parent.addChildNode(new_node, below_node)
+                            elif active_index == 0:
+                                active_node_duplicate = active_node.duplicate()
+                                parent.addChildNode(active_node_duplicate, active_node)
+                                doc.refreshProjection()
+                                child_nodes = parent.childNodes()
+                                below_node = child_nodes[
+                                    child_nodes.index(active_node_duplicate) - 1
+                                ]
+                                parent.addChildNode(new_node, below_node)
+                                active_node.remove()
+                                doc.refreshProjection()
                             else:
                                 # Active node is at the bottom, add at bottom
                                 parent.addChildNode(new_node, None)
