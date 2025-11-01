@@ -1,6 +1,6 @@
 # Krita Lazy Tools
 
-A Krita plugin that adds layer management and automation tools.
+A Krita plugin that adds custom layer management, automation tools and color pick function.
 
 ![Setting](./lazy_tools/images/1.png)
 
@@ -40,6 +40,13 @@ A Krita plugin that adds layer management and automation tools.
 
 ## Custom Actions
 A collection of scripts to speed up workflow.
+- Add New Layer
+- Duplicate Layer
+- Color Pick from Anywhere
+
+Go to `Settings > Configure Krita > Keyboard Shortcuts` and search for:
+- "Add New Layer Alternative"
+- "Duplicate Layer Alternative"
 
 ### Add New Layer
 ![alt text](lazy_tools/images/new_layer.png)
@@ -69,12 +76,6 @@ Duplicates the active layer with options:
 - **Blending Mode** - Change blending mode (for paint layer)
 - **Hide Original** - Hides the original layer after duplicating
 - **Add to Group** - Create a new group and move layers into it
-
-### Usage
-
-Go to `Settings > Configure Krita > Keyboard Shortcuts` and search for:
-- "Add New Layer Alternative"
-- "Duplicate Layer Alternative"
 
 ### Color Pick from Anywhere
 
