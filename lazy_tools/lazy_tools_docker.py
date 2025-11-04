@@ -1,9 +1,3 @@
-"""
-Lazy Tools Docker for Krita
-
-This docker provides advanced color-based layer filtering with visibility and opacity controls.
-"""
-
 from typing import Optional, List, Dict
 from krita import DockWidgetFactory, DockWidgetFactoryBase, Krita, Node  # type: ignore
 from PyQt5.QtWidgets import (
@@ -33,6 +27,11 @@ class LazyToolsDockerWidget(QDockWidget):
         super().__init__()
         self.setWindowTitle("Lazy Tools")
         self.setup_ui()
+
+        ## Disable top menu shortcuts
+        application = Krita.instance()
+        appNotifier = application.notifier()
+        appNotifier.windowCreated.connect(self.disable_top_menu_shortcuts)
 
         # Setup timer to update UI every 1 second
         self.update_timer = QTimer(self)
@@ -149,6 +148,16 @@ class LazyToolsDockerWidget(QDockWidget):
                     main_widget.adjustSize()
                 break
             parent_widget = parent_widget.parent()
+
+    def disable_top_menu_shortcuts(self):
+        ########################################################
+        ## Disable top menu shortcuts
+        qwin = Krita.instance().activeWindow().qwindow()
+        # Disable top menu shortcuts by removing "&" from their texts
+        actions = qwin.menuWidget().actions()
+        for action in actions:
+            action.setText(action.text().replace("&", ""))
+        ########################################################
 
 
 class CollapsibleSection(QWidget):

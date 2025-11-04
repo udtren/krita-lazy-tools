@@ -43,6 +43,7 @@ A collection of scripts to speed up workflow.
 - Add New Layer
 - Duplicate Layer
 - Color Pick from Anywhere
+- Disable Top Menu Shortcuts
 
 Go to `Settings > Configure Krita > Keyboard Shortcuts` and search for:
 - "Add New Layer Alternative"
@@ -89,6 +90,10 @@ Pick colors from anywhere on your screen (including other apps like PureRef) usi
 **Platform:** Windows only
 
 **Note:** If you don't need this feature, remove the line `from .e_scripts.color_pick import *` from `__init__.py` to disable it.
+
+### Disable Top Menu Shortcuts
+
+[Disable the Alt shortcuts on the menu entries.](https://krita-artists.org/t/a-way-to-disable-override-windows-default-alt-menu-command-please/78828/5)
 
 ## Florence-2 + SAM2.1 AI Segmentation
 
