@@ -4,6 +4,12 @@ A Krita plugin that adds custom layer management, automation tools and color pic
 
 ![Setting](./lazy_tools/images/1.png)
 
+## Support
+
+If you find this tool helpful, you can support its development:
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/toma_omito)
+
 ## Features
 ### Color Labeling
 - Adds a color label dropdown to Krita's Layer Docker
