@@ -248,7 +248,3 @@ class AddNewLayerExtension(Extension):
 
         except Exception as e:
             print(f"Error creating new layer: {e}")
-
-
-# Required: Register the extension
-Krita.instance().addExtension(AddNewLayerExtension(Krita.instance()))

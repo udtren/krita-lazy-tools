@@ -145,7 +145,3 @@ class ScreenColorPicker(Extension):
         if self.hotkey_thread:
             self.hotkey_thread.stop()
             self.hotkey_thread.wait()
-
-
-# Register the extension
-Krita.instance().addExtension(ScreenColorPicker(Krita.instance()))

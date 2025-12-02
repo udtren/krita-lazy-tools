@@ -6,6 +6,8 @@ from .lazy_tools_docker import LazyToolsDockerFactory
 from .e_scripts.duplicate import *
 from .e_scripts.new_layer import *
 from .e_scripts.color_pick import *
+from .e_scripts.group_expand import *
+from .e_scripts.group_fold import *
 
 
 class LazyToolsExtension(Extension):
@@ -27,5 +29,9 @@ class LazyToolsExtension(Extension):
 # Register all extensions with Krita
 Krita.instance().addExtension(LazyColorLabel(Krita.instance()))
 Krita.instance().addExtension(LazyColorFilter(Krita.instance()))
-# Krita.instance().addExtension(LazyScripts(Krita.instance()))
 Krita.instance().addExtension(LazyToolsExtension(Krita.instance()))
+Krita.instance().addExtension(ExpandAllGroups(Krita.instance()))
+Krita.instance().addExtension(FolderAllGroups(Krita.instance()))
+Krita.instance().addExtension(AddNewLayerExtension(Krita.instance()))
+Krita.instance().addExtension(DuplicateLayerExtension(Krita.instance()))
+Krita.instance().addExtension(ScreenColorPicker(Krita.instance()))

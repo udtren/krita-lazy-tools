@@ -50,10 +50,14 @@ A collection of scripts to speed up workflow.
 - Duplicate Layer
 - Color Pick from Anywhere
 - Disable Top Menu Shortcuts
+- Folder All Layer Groups
+- Exapnd All Layer Groups
 
 Go to `Settings > Configure Krita > Keyboard Shortcuts` and search for:
 - "Add New Layer Alternative"
 - "Duplicate Layer Alternative"
+- "Expand All Folders"
+- "Fold All Folders"
 
 ### Add New Layer
 ![alt text](lazy_tools/images/new_layer.png)

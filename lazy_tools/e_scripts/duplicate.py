@@ -156,7 +156,3 @@ class DuplicateLayerExtension(Extension):
 
         except Exception as e:
             print(f"Error duplicating active layer: {e}")
-
-
-# Required: Register the extension
-Krita.instance().addExtension(DuplicateLayerExtension(Krita.instance()))
