@@ -9,4 +9,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Two new layer group actions
   - Fold All Layer Groups - Collapse all layer groups in the document
   - Expand All Layer Groups - Expand all layer groups in the document
+- Deselect Alternative - Deselect and Switch to Freehand Brush Tool in one action
 

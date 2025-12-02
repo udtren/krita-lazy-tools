@@ -8,6 +8,7 @@ from .e_scripts.new_layer import *
 from .e_scripts.color_pick import *
 from .e_scripts.group_expand import *
 from .e_scripts.group_fold import *
+from .e_scripts.deselect_alt import *
 
 
 class LazyToolsExtension(Extension):
@@ -35,3 +36,4 @@ Krita.instance().addExtension(FolderAllGroups(Krita.instance()))
 Krita.instance().addExtension(AddNewLayerExtension(Krita.instance()))
 Krita.instance().addExtension(DuplicateLayerExtension(Krita.instance()))
 Krita.instance().addExtension(ScreenColorPicker(Krita.instance()))
+Krita.instance().addExtension(DeselectAlternative(Krita.instance()))

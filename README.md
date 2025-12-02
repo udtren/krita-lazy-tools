@@ -52,12 +52,14 @@ A collection of scripts to speed up workflow.
 - Disable Top Menu Shortcuts
 - Folder All Layer Groups
 - Exapnd All Layer Groups
+- Deselect
 
 Go to `Settings > Configure Krita > Keyboard Shortcuts` and search for:
 - "Add New Layer Alternative"
 - "Duplicate Layer Alternative"
 - "Expand All Folders"
 - "Fold All Folders"
+- "Deselect Alternative"
 
 ### Add New Layer
 ![alt text](lazy_tools/images/new_layer.png)
@@ -104,6 +106,9 @@ Pick colors from anywhere on your screen (including other apps like PureRef) usi
 ### Disable Top Menu Shortcuts
 
 [Disable the Alt shortcuts on the menu entries.](https://krita-artists.org/t/a-way-to-disable-override-windows-default-alt-menu-command-please/78828/5)
+
+### Deselect Alternative
+Deselect and Switch to Freehand Brush Tool in one action.
 
 ## Florence-2 + SAM2.1 AI Segmentation
 
