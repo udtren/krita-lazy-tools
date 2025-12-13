@@ -3,9 +3,9 @@
     <Actions category="Scripts">
         <text>Lazy Tools</text>
 
-        <Action name="add_new_layer_alternative">
+        <Action name="create_selection_mask_alternative">
             <icon></icon>
-            <text>Add New Layer Alternative</text>
+            <text>Create Selection Mask Alternative</text>
             <iconText></iconText>
             <activationFlags>1</activationFlags>
             <activationConditions>0</activationConditions>
