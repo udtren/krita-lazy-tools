@@ -3,12 +3,14 @@ from .lazy_color import LazyColorLabel
 from .lazy_color_filter import LazyColorFilter
 from .lazy_scripts import LazyScripts
 from .lazy_tools_docker import LazyToolsDockerFactory
-from .e_scripts.duplicate import *
-from .e_scripts.new_layer import *
-from .e_scripts.color_pick import *
-from .e_scripts.group_expand import *
-from .e_scripts.group_fold import *
-from .e_scripts.deselect_alt import *
+from .e_scripts.duplicate import DuplicateLayerExtension
+from .e_scripts.new_layer import AddNewLayerExtension
+from .e_scripts.color_pick import ScreenColorPicker
+from .e_scripts.group_expand import ExpandAllGroups
+from .e_scripts.group_fold import FolderAllGroups
+from .e_scripts.deselect_alt import DeselectAlternative
+from .e_scripts.selection_mask import CreateSelectionMaskAlternative
+from .e_scripts.selection_mask_popup import CreateSelectionMaskPopup
 
 
 class LazyToolsExtension(Extension):
@@ -28,12 +30,20 @@ class LazyToolsExtension(Extension):
 
 
 # Register all extensions with Krita
-Krita.instance().addExtension(LazyColorLabel(Krita.instance()))
-Krita.instance().addExtension(LazyColorFilter(Krita.instance()))
-Krita.instance().addExtension(LazyToolsExtension(Krita.instance()))
-Krita.instance().addExtension(ExpandAllGroups(Krita.instance()))
-Krita.instance().addExtension(FolderAllGroups(Krita.instance()))
-Krita.instance().addExtension(AddNewLayerExtension(Krita.instance()))
-Krita.instance().addExtension(DuplicateLayerExtension(Krita.instance()))
-Krita.instance().addExtension(ScreenColorPicker(Krita.instance()))
-Krita.instance().addExtension(DeselectAlternative(Krita.instance()))
+app = Krita.instance()
+extensions = [
+    LazyColorLabel,
+    LazyColorFilter,
+    LazyToolsExtension,
+    ExpandAllGroups,
+    FolderAllGroups,
+    AddNewLayerExtension,
+    DuplicateLayerExtension,
+    ScreenColorPicker,
+    DeselectAlternative,
+    CreateSelectionMaskAlternative,
+    CreateSelectionMaskPopup,
+]
+
+for extension_class in extensions:
+    app.addExtension(extension_class(app))
