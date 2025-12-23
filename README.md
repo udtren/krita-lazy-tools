@@ -10,6 +10,24 @@ If you find this tool helpful, you can support its development:
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/toma_omito)
 
+## Table of Contents
+- [Features](#features)
+  - [Color Labeling](#color-labeling)
+  - [Color Filtering](#color-filtering)
+  - [Name Filtering](#name-filtering)
+  - [AI Segmentation](#ai-segmentation)
+  - [Script Execution](#script-execution)
+- [Custom Actions](#custom-actions)
+  - [Add New Layer](#add-new-layer)
+  - [Duplicate Layer](#duplicate-layer)
+  - [Color Pick from Anywhere](#color-pick-from-anywhere)
+  - [Disable Top Menu Shortcuts](#disable-top-menu-shortcuts)
+  - [Deselect Alternative](#deselect-alternative)
+- [Florence-2 + SAM2.1 AI Segmentation](#florence-2--sam21-ai-segmentation)
+  - [Key Features](#key-features)
+  - [How to Use](#how-to-use)
+  - [Installation & Setup](#installation--setup)
+
 ## Features
 ### Color Labeling
 - Adds a color label dropdown to Krita's Layer Docker
