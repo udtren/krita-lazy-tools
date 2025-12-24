@@ -22,6 +22,8 @@ If you find this tool helpful, you can support its development:
   - [Duplicate Layer](#duplicate-layer)
   - [Color Pick from Anywhere](#color-pick-from-anywhere)
   - [Disable Top Menu Shortcuts](#disable-top-menu-shortcuts)
+  - [Selection Mask Alternative](#selection-mask-alternative)
+  - [Selection Mask Popup](#selection-mask-popup)
   - [Deselect Alternative](#deselect-alternative)
 - [Florence-2 + SAM2.1 AI Segmentation](#florence-2--sam21-ai-segmentation)
   - [Key Features](#key-features)
@@ -70,6 +72,8 @@ A collection of scripts to speed up workflow.
 - Disable Top Menu Shortcuts
 - Folder All Layer Groups
 - Exapnd All Layer Groups
+- Selection Mask
+- Selection Mask Popup
 - Deselect
 
 Go to `Settings > Configure Krita > Keyboard Shortcuts` and search for:
@@ -77,6 +81,8 @@ Go to `Settings > Configure Krita > Keyboard Shortcuts` and search for:
 - "Duplicate Layer Alternative"
 - "Expand All Folders"
 - "Fold All Folders"
+- "Create Selection Mask Alternative"
+- "Create Selection Mask Popup"
 - "Deselect Alternative"
 
 ### Add New Layer
@@ -124,6 +130,14 @@ Pick colors from anywhere on your screen (including other apps like PureRef) usi
 ### Disable Top Menu Shortcuts
 
 [Disable the Alt shortcuts on the menu entries.](https://krita-artists.org/t/a-way-to-disable-override-windows-default-alt-menu-command-please/78828/5)
+
+### Selection Mask Alternative
+Creates a selection mask and places it into a layer group called `Selection_Mask_Group`.
+
+### Selection Mask Popup
+![alt text](lazy_tools/images/selection_maks_popup.png)
+
+Opens a popup window displaying all masks inside the `Selection_Mask_Group`. Click any mask thumbnail to activate it.
 
 ### Deselect Alternative
 Deselect and Switch to Freehand Brush Tool in one action.
