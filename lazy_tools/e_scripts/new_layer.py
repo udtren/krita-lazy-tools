@@ -15,11 +15,13 @@ BLENDING_MODES = [
     "normal",
     "multiply",
     "screen",
-    "color_dodge",
+    "dodge",
     "overlay",
     "soft_light_svg",
+    "hard_light",
     "darken",
     "lighten",
+    "greater",
 ]
 
 
