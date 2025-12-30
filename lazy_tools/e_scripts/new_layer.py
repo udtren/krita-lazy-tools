@@ -1,4 +1,6 @@
 import uuid
+import os
+import sys
 from krita import Krita, Extension, InfoObject, Selection
 from PyQt5.QtWidgets import (
     QDialog,
@@ -10,6 +12,10 @@ from PyQt5.QtWidgets import (
     QPushButton,
     QCheckBox,
 )
+
+# Add parent directory to path to import from lazy_tools
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
+from config.config_loader import load_name_color_list
 
 BLENDING_MODES = [
     "normal",
@@ -41,8 +47,35 @@ class NewLayerDialog(QDialog):
         # Layer name input
         name_layout = QHBoxLayout()
         name_label = QLabel("Layer Name:")
-        self.name_input = QLineEdit()
-        self.name_input.setPlaceholderText("auto-generate if empty")
+        self.name_input = QComboBox()
+        self.name_input.setEditable(True)
+        self.name_input.lineEdit().setPlaceholderText("auto-generate if empty")
+
+        # Add empty string as first item
+        self.name_input.addItem("")
+
+        # Load and add names from name_color_list.txt
+        content = load_name_color_list()
+        if content:
+            lines = content.strip().split("\n")
+            for line in lines:
+                line = line.strip()
+                if not line:
+                    continue
+
+                # Parse line: "layer_name" or "layer_name, Color"
+                # Extract only the name part (before comma if present)
+                if "," in line:
+                    name = line.split(",", 1)[0].strip()
+                else:
+                    name = line
+
+                if name:
+                    self.name_input.addItem(name)
+
+        # Set current text to empty (first item)
+        self.name_input.setCurrentText("")
+
         name_layout.addWidget(name_label)
         name_layout.addWidget(self.name_input)
         layout.addLayout(name_layout)
@@ -102,7 +135,7 @@ class NewLayerDialog(QDialog):
 
     def get_values(self):
         """Get the user input values"""
-        name = self.name_input.text().strip()
+        name = self.name_input.currentText().strip()
         layer_type = self.type_combo.currentText()
         blending_mode = self.blending_mode_combo.currentText()
         add_below = self.add_below_checkbox.isChecked()

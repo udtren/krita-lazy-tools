@@ -1,6 +1,8 @@
 __pycache__/
 lazy_tools/models/*
 .venv
+lazy_tools/config/common.json
+lazy_tools/config/name_color_list.txt
 # Stop tracking scripts folder but keep existing files
 lazy_tools/scripts/
 logs/

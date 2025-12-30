@@ -1,7 +1,6 @@
 from krita import Krita, Extension  # type: ignore
 from .lazy_color import LazyColorLabel
 from .lazy_color_filter import LazyColorFilter
-from .lazy_scripts import LazyScripts
 from .lazy_tools_docker import LazyToolsDockerFactory
 from .e_scripts.duplicate import DuplicateLayerExtension
 from .e_scripts.new_layer import AddNewLayerExtension
@@ -11,6 +10,12 @@ from .e_scripts.group_fold import FolderAllGroups
 from .e_scripts.deselect_alt import DeselectAlternative
 from .e_scripts.selection_mask import CreateSelectionMaskAlternative
 from .e_scripts.selection_mask_popup import CreateSelectionMaskPopup
+from .e_scripts.rename import RenameAlternative
+from .config.config_loader import get_script_enabled, ensure_config_exists
+
+
+# Ensure config file exists with default settings
+ensure_config_exists()
 
 
 class LazyToolsExtension(Extension):
@@ -38,12 +43,16 @@ extensions = [
     ExpandAllGroups,
     FolderAllGroups,
     AddNewLayerExtension,
+    RenameAlternative,
     DuplicateLayerExtension,
-    ScreenColorPicker,
     DeselectAlternative,
     CreateSelectionMaskAlternative,
     CreateSelectionMaskPopup,
 ]
+
+# Conditionally add ScreenColorPicker based on config
+if get_script_enabled("screen_color_picker"):
+    extensions.append(ScreenColorPicker)
 
 for extension_class in extensions:
     app.addExtension(extension_class(app))

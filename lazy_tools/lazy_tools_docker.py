@@ -8,13 +8,26 @@ from PyQt5.QtWidgets import (
     QLabel,
     QDockWidget,
     QFrame,
+    QDialog,
+    QTabWidget,
+    QCheckBox,
+    QFormLayout,
+    QTextEdit,
 )
-from PyQt5.QtCore import QTimer
+from PyQt5.QtCore import QTimer, Qt, QSize
 from PyQt5.QtGui import QIcon, QPixmap, QColor
 from lazy_tools.widgets.color_filter_widgets import ColorFilterSection
 from lazy_tools.widgets.scripts_widgets import ScriptsSection
 from lazy_tools.widgets.segment_widgets import SegmentSection
 from lazy_tools.widgets.name_filter_widgets import NameFilterSection
+from lazy_tools.config.config_loader import (
+    get_script_enabled,
+    load_config,
+    save_config,
+    set_script_enabled,
+    load_name_color_list,
+    save_name_color_list,
+)
 import os
 
 
@@ -29,9 +42,10 @@ class LazyToolsDockerWidget(QDockWidget):
         self.setup_ui()
 
         ## Disable top menu shortcuts
-        application = Krita.instance()
-        appNotifier = application.notifier()
-        appNotifier.windowCreated.connect(self.disable_top_menu_shortcuts)
+        if get_script_enabled("disable_top_menu_shortcuts"):
+            application = Krita.instance()
+            appNotifier = application.notifier()
+            appNotifier.windowCreated.connect(self.disable_top_menu_shortcuts)
 
         # Setup timer to update UI every 1 second
         self.update_timer = QTimer(self)
@@ -101,6 +115,27 @@ class LazyToolsDockerWidget(QDockWidget):
         # Add small stretch at the end to push content up slightly
         main_layout.addStretch()
 
+        ##############################
+        # Add Settings button at the bottom
+        ##############################
+        settings_button_layout = QHBoxLayout()
+        settings_button_layout.setContentsMargins(0, 0, 0, 0)
+
+        self.settings_button = QPushButton()
+        icon_path = os.path.join(
+            os.path.dirname(__file__), "config", "icon", "setting.png"
+        )
+        self.settings_button.setIcon(QIcon(icon_path))
+        self.settings_button.setIconSize(QSize(18, 18))
+        self.settings_button.setFixedSize(24, 24)
+        self.settings_button.setToolTip("Settings")
+        self.settings_button.clicked.connect(self.open_settings_dialog)
+
+        settings_button_layout.addWidget(self.settings_button)
+        settings_button_layout.addStretch()
+
+        main_layout.addLayout(settings_button_layout)
+
         main_widget.setLayout(main_layout)
         self.setWidget(main_widget)
 
@@ -158,6 +193,137 @@ class LazyToolsDockerWidget(QDockWidget):
         for action in actions:
             action.setText(action.text().replace("&", ""))
         ########################################################
+
+    def open_settings_dialog(self):
+        """Open the settings configuration dialog"""
+        dialog = SettingsDialog(self)
+        dialog.exec_()
+
+
+class SettingsDialog(QDialog):
+    """Settings dialog for Lazy Tools configuration"""
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("Lazy Tools Settings")
+        self.setMinimumSize(400, 300)
+        self.setup_ui()
+
+    def setup_ui(self):
+        """Setup the settings dialog UI"""
+        layout = QVBoxLayout()
+
+        # Create tab widget
+        self.tab_widget = QTabWidget()
+
+        # Create Common settings tab
+        self.common_tab = QWidget()
+        self.setup_common_tab()
+        self.tab_widget.addTab(self.common_tab, "Common")
+
+        # Create Name List tab
+        self.name_list_tab = QWidget()
+        self.setup_name_list_tab()
+        self.tab_widget.addTab(self.name_list_tab, "Name List")
+
+        layout.addWidget(self.tab_widget)
+
+        # Add Save and Cancel buttons
+        button_layout = QHBoxLayout()
+        button_layout.addStretch()
+
+        self.save_button = QPushButton("Save")
+        self.save_button.clicked.connect(self.save_settings)
+
+        self.cancel_button = QPushButton("Cancel")
+        self.cancel_button.clicked.connect(self.reject)
+
+        button_layout.addWidget(self.save_button)
+        button_layout.addWidget(self.cancel_button)
+
+        layout.addLayout(button_layout)
+        self.setLayout(layout)
+
+    def setup_common_tab(self):
+        """Setup the Common settings tab"""
+        layout = QFormLayout()
+
+        # Load current config
+        config = load_config()
+
+        # Create checkboxes for each script
+        self.checkboxes = {}
+
+        # Screen Color Picker setting
+        screen_color_picker_enabled = config.get("screen_color_picker", {}).get(
+            "enabled", True
+        )
+        self.screen_color_picker_checkbox = QCheckBox("Enable Screen Color Picker")
+        self.screen_color_picker_checkbox.setChecked(screen_color_picker_enabled)
+        self.checkboxes["screen_color_picker"] = self.screen_color_picker_checkbox
+        layout.addRow(self.screen_color_picker_checkbox)
+
+        # Disable Top Menu Shortcuts setting
+        disable_top_menu_enabled = config.get("disable_top_menu_shortcuts", {}).get(
+            "enabled", True
+        )
+        self.disable_top_menu_checkbox = QCheckBox("Disable Top Menu Shortcuts")
+        self.disable_top_menu_checkbox.setChecked(disable_top_menu_enabled)
+        self.checkboxes["disable_top_menu_shortcuts"] = self.disable_top_menu_checkbox
+        layout.addRow(self.disable_top_menu_checkbox)
+
+        # Add note label
+        note_label = QLabel("Note: Changes will take effect after restarting Krita.")
+        note_label.setStyleSheet("color: #888; font-style: italic; margin-top: 10px;")
+        layout.addRow(note_label)
+
+        self.common_tab.setLayout(layout)
+
+    def setup_name_list_tab(self):
+        """Setup the Name List tab"""
+        layout = QVBoxLayout()
+
+        # Add description label
+        description_label = QLabel(
+            "Configure layer names and optional colors.\n"
+            "Format: layer_name or layer_name, Color\n"
+            "\n"
+            "Supported colors: Blue, Green, Yellow, Orange, Brown, Red, Purple, Grey\n"
+            "\n"
+            "Example:\n"
+            "  layer_name1\n"
+            "  layer_name2\n"
+            "  layer_name3, Blue"
+        )
+        description_label.setStyleSheet("color: #888; font-size: 11px; margin-bottom: 5px;")
+        layout.addWidget(description_label)
+
+        # Create text edit for name color list
+        self.name_color_list_text = QTextEdit()
+        self.name_color_list_text.setPlaceholderText(
+            "Enter layer names here, one per line...\n"
+            "Optionally add color: layer_name, Color"
+        )
+
+        # Load current content
+        current_content = load_name_color_list()
+        self.name_color_list_text.setPlainText(current_content)
+
+        layout.addWidget(self.name_color_list_text)
+
+        self.name_list_tab.setLayout(layout)
+
+    def save_settings(self):
+        """Save settings to config file"""
+        # Update config for each script
+        for script_name, checkbox in self.checkboxes.items():
+            set_script_enabled(script_name, checkbox.isChecked())
+
+        # Save name color list
+        name_color_content = self.name_color_list_text.toPlainText()
+        save_name_color_list(name_color_content)
+
+        self.accept()
 
 
 class CollapsibleSection(QWidget):
