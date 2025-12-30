@@ -19,6 +19,7 @@ If you find this tool helpful, you can support its development:
   - [Script Execution](#script-execution)
 - [Custom Actions](#custom-actions)
   - [Add New Layer](#add-new-layer)
+  - [Rename Layer](#rename-layer)
   - [Duplicate Layer](#duplicate-layer)
   - [Color Pick from Anywhere](#color-pick-from-anywhere)
   - [Disable Top Menu Shortcuts](#disable-top-menu-shortcuts)
@@ -67,6 +68,7 @@ If you find this tool helpful, you can support its development:
 ## Custom Actions
 A collection of scripts to speed up workflow.
 - Add New Layer
+- Rename Layer
 - Duplicate Layer
 - Color Pick from Anywhere
 - Disable Top Menu Shortcuts
@@ -78,6 +80,7 @@ A collection of scripts to speed up workflow.
 
 Go to `Settings > Configure Krita > Keyboard Shortcuts` and search for:
 - "Add New Layer Alternative"
+- "Rename Alternative"
 - "Duplicate Layer Alternative"
 - "Expand All Folders"
 - "Fold All Folders"
@@ -86,7 +89,7 @@ Go to `Settings > Configure Krita > Keyboard Shortcuts` and search for:
 - "Deselect Alternative"
 
 ### Add New Layer
-![alt text](lazy_tools/images/new_layer.png)
+![add new layer](lazy_tools/images/new_layer.png)
 
 Opens a dialog to create a new layer with options:
 
@@ -96,12 +99,36 @@ Opens a dialog to create a new layer with options:
 - Fill layer(Foreground Color)
 
 **Options:**
-- **Layer Name** - Leave empty to auto-generate (e.g. `Paint-a3f2`, `Group-7b4c`)
+- **Layer Name** - Editable combo box populated with names from config file. Leave empty to auto-generate (e.g. `Paint-a3f2`, `Group-7b4c`). You can select from predefined names or type a custom name.
 - **Blending Mode** - Choose from a list or type your own
 - **Add Below** - Creates the layer below the active layer instead of above
 - **Add As Child** - If active layer is a group, creates the layer inside that group
 - **Inherit Alpha** - Enable alpha inheritance
 - **Pass Through** - Enable pass-through mode (for group layers)
+
+### Rename Layer
+![rename](lazy_tools/images/rename.gif)
+
+Quick rename dialog that appears at your mouse cursor position.
+
+**Features:**
+- Displays layer names from config file (`lazy_tools/config/name_color_list.txt`)
+- Shows color icons next to layer names when color is specified
+- Click any name to rename active layer and apply color label
+- Supports case-insensitive color names: Blue, Green, Yellow, Orange, Brown, Red, Purple, Grey
+- Sets color to None/Transparent when no color is specified
+
+**Configuration:**
+- Open Settings dialog from Lazy Tools docker (gear icon at bottom)
+- Go to "Name List" tab to edit layer names and colors
+- Format: `layer_name` or `layer_name, Color`
+- Example:
+  ```
+  sketch
+  lineart, Blue
+  base_color, Green
+  shading, Yellow
+  ```
 
 ### Duplicate Layer
 ![alt text](lazy_tools/images/duplicate.png)
