@@ -13,6 +13,17 @@ from PyQt5.QtWidgets import (
     QCheckBox,
 )
 
+try:
+    from quick_access_manager.gesture.gesture_main import (
+        pause_gesture_event_filter,
+        resume_gesture_event_filter,
+        is_gesture_filter_paused,
+    )
+
+    GESTURE_AVAILABLE = True
+except ImportError:
+    GESTURE_AVAILABLE = False
+
 # Add parent directory to path to import from lazy_tools
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from config.config_loader import load_name_color_list
@@ -185,9 +196,21 @@ class AddNewLayerExtension(Extension):
                 print("No active document")
                 return
 
+            # Pause gesture if available and not already paused
+            should_resume_gesture = False
+            if GESTURE_AVAILABLE and not is_gesture_filter_paused():
+                pause_gesture_event_filter()
+                should_resume_gesture = True
+
             # Show dialog
             dialog = NewLayerDialog()
-            if dialog.exec_() == QDialog.Accepted:
+            result = dialog.exec_()
+
+            # Resume gesture if we paused it
+            if should_resume_gesture:
+                resume_gesture_event_filter()
+
+            if result == QDialog.Accepted:
                 # Get values from dialog
                 (
                     layer_name,

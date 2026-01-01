@@ -2,18 +2,34 @@ from krita import *
 from PyQt5.QtWidgets import (
     QDialog,
     QVBoxLayout,
+    QHBoxLayout,
     QListWidget,
     QListWidgetItem,
     QApplication,
+    QComboBox,
+    QLineEdit,
+    QCheckBox,
+    QPushButton,
 )
 from PyQt5.QtCore import Qt, QSize
-from PyQt5.QtGui import QPixmap, QIcon, QCursor
+from PyQt5.QtGui import QPixmap, QIcon, QCursor, QColor
 import os
 import sys
 
+try:
+    from quick_access_manager.gesture.gesture_main import (
+        pause_gesture_event_filter,
+        resume_gesture_event_filter,
+        is_gesture_filter_paused,
+    )
+
+    GESTURE_AVAILABLE = True
+except ImportError:
+    GESTURE_AVAILABLE = False
+
 # Add parent directory to path to import from lazy_tools
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
-from config.config_loader import load_name_color_list
+from config.config_loader import load_name_color_list, save_name_color_list
 from utils.color_scheme import ColorScheme
 
 
@@ -76,6 +92,67 @@ class RenameDialog(QDialog):
                 self.list_widget.addItem(item)
 
         layout.addWidget(self.list_widget)
+
+        # Manual input section
+        manual_layout = QHBoxLayout()
+
+        # Color combo box with icons only (no text)
+        self.color_combo = QComboBox()
+
+        # Add None/Transparent with white icon
+        white_pixmap = QPixmap(14, 14)
+        white_pixmap.fill(QColor(255, 255, 255))
+        self.color_combo.addItem(QIcon(white_pixmap), "")
+        self.color_combo.setItemData(0, "None/Transparent", Qt.UserRole)
+
+        # Add colors with icons only
+        color_items = [
+            ("Blue", 1),
+            ("Green", 2),
+            ("Yellow", 3),
+            ("Orange", 4),
+            ("Brown", 5),
+            ("Red", 6),
+            ("Purple", 7),
+            ("Grey", 8),
+        ]
+
+        for idx, (color_name, color_index) in enumerate(color_items, start=1):
+            color = ColorScheme.COLORS.get(color_index)
+            if color:
+                pixmap = QPixmap(14, 14)
+                pixmap.fill(color)
+                self.color_combo.addItem(QIcon(pixmap), "")
+                self.color_combo.setItemData(idx, color_name, Qt.UserRole)
+
+        manual_layout.addWidget(self.color_combo)
+
+        # Name input
+        self.name_input = QLineEdit()
+        self.name_input.setPlaceholderText("Layer name")
+        manual_layout.addWidget(self.name_input)
+
+        # Save checkbox
+        self.save_checkbox = QCheckBox("Save")
+        manual_layout.addWidget(self.save_checkbox)
+
+        layout.addLayout(manual_layout)
+
+        # Button layout
+        button_layout = QHBoxLayout()
+
+        # OK button
+        ok_button = QPushButton("OK")
+        ok_button.clicked.connect(self.on_manual_ok)
+        button_layout.addWidget(ok_button)
+
+        # Cancel button
+        cancel_button = QPushButton("Cancel")
+        cancel_button.clicked.connect(self.reject)
+        button_layout.addWidget(cancel_button)
+
+        layout.addLayout(button_layout)
+
         self.setLayout(layout)
 
     def get_color_index(self, color_name):
@@ -142,9 +219,71 @@ class RenameDialog(QDialog):
         # Close dialog after renaming
         self.accept()
 
+    def on_manual_ok(self):
+        """Handle manual OK button - rename layer with manual input"""
+        # Get manual input values
+        name = self.name_input.text().strip()
+        # Get color name from UserRole data
+        color_text = self.color_combo.currentData(Qt.UserRole)
+        should_save = self.save_checkbox.isChecked()
+
+        # Validate name
+        if not name:
+            return
+
+        # Get color index
+        if color_text == "None/Transparent":
+            color_index = 0
+        else:
+            color_index = self.get_color_index(color_text)
+
+        # Get active document and node
+        app = Krita.instance()
+        doc = app.activeDocument()
+
+        if not doc:
+            return
+
+        active_node = doc.activeNode()
+        if not active_node:
+            return
+
+        # Set layer name and color
+        active_node.setName(name)
+        active_node.setColorLabel(color_index)
+
+        # Save to config if checkbox is checked
+        if should_save:
+            # Load current content
+            content = load_name_color_list()
+            lines = content.strip().split("\n") if content else []
+
+            # Create new line
+            if color_text == "None/Transparent":
+                new_line = name
+            else:
+                new_line = f"{name}, {color_text}"
+
+            # Add new line if not already exists
+            if new_line not in lines:
+                lines.append(new_line)
+
+            # Save updated content
+            updated_content = "\n".join(lines)
+            save_name_color_list(updated_content)
+
+        # Close dialog
+        self.accept()
+
 
 def rename_alt():
     """Show rename dialog at mouse cursor position"""
+    # Pause gesture if available and not already paused
+    should_resume_gesture = False
+    if GESTURE_AVAILABLE and not is_gesture_filter_paused():
+        pause_gesture_event_filter()
+        should_resume_gesture = True
+
     dialog = RenameDialog()
 
     # Get current mouse cursor position
@@ -154,6 +293,10 @@ def rename_alt():
     dialog.move(cursor_pos)
 
     dialog.exec_()
+
+    # Resume gesture if we paused it
+    if should_resume_gesture:
+        resume_gesture_event_filter()
 
 
 class RenameAlternative(Extension):

@@ -108,13 +108,17 @@ Opens a dialog to create a new layer with options:
 
 ### Rename Layer
 ![rename](lazy_tools/images/rename.gif)
-
+![alt text](lazy_tools/images/rename2.gif)
 Quick rename dialog that appears at your mouse cursor position.
 
 **Features:**
 - Displays layer names from config file (`lazy_tools/config/name_color_list.txt`)
 - Shows color icons next to layer names when color is specified
 - Click any name to rename active layer and apply color label
+- Manual input section for custom names with color icon dropdown
+  - Select color using visual color icons
+  - Type custom layer name
+  - Optional: Save to config file with "Save" checkbox
 - Supports case-insensitive color names: Blue, Green, Yellow, Orange, Brown, Red, Purple, Grey
 - Sets color to None/Transparent when no color is specified
 
