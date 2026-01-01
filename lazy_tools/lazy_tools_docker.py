@@ -30,6 +30,17 @@ from lazy_tools.config.config_loader import (
 )
 import os
 
+try:
+    from quick_access_manager.gesture.gesture_main import (
+        pause_gesture_event_filter,
+        resume_gesture_event_filter,
+        is_gesture_filter_paused,
+    )
+
+    GESTURE_AVAILABLE = True
+except ImportError:
+    GESTURE_AVAILABLE = False
+
 
 class LazyToolsDockerWidget(QDockWidget):
     """
@@ -196,8 +207,18 @@ class LazyToolsDockerWidget(QDockWidget):
 
     def open_settings_dialog(self):
         """Open the settings configuration dialog"""
+        # Pause gesture if available and not already paused
+        should_resume_gesture = False
+        if GESTURE_AVAILABLE and not is_gesture_filter_paused():
+            pause_gesture_event_filter()
+            should_resume_gesture = True
+
         dialog = SettingsDialog(self)
         dialog.exec_()
+
+        # Resume gesture if we paused it
+        if should_resume_gesture:
+            resume_gesture_event_filter()
 
 
 class SettingsDialog(QDialog):
@@ -295,7 +316,9 @@ class SettingsDialog(QDialog):
             "  layer_name2\n"
             "  layer_name3, Blue"
         )
-        description_label.setStyleSheet("color: #888; font-size: 11px; margin-bottom: 5px;")
+        description_label.setStyleSheet(
+            "color: #888; font-size: 11px; margin-bottom: 5px;"
+        )
         layout.addWidget(description_label)
 
         # Create text edit for name color list
