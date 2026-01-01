@@ -11,6 +11,17 @@ from PyQt5.QtWidgets import (
     QCheckBox,
 )
 
+try:
+    from quick_access_manager.gesture.gesture_main import (
+        pause_gesture_event_filter,
+        resume_gesture_event_filter,
+        is_gesture_filter_paused,
+    )
+
+    GESTURE_AVAILABLE = True
+except ImportError:
+    GESTURE_AVAILABLE = False
+
 BLENDING_MODES = [
     "normal",
     "multiply",
@@ -108,11 +119,23 @@ class DuplicateLayerExtension(Extension):
             if not doc:
                 return
 
+            # Pause gesture if available and not already paused
+            should_resume_gesture = False
+            if GESTURE_AVAILABLE and not is_gesture_filter_paused():
+                pause_gesture_event_filter()
+                should_resume_gesture = True
+
             dialog = DuplicateLayerDialog(
                 name=doc.activeNode().name(),
                 blendingMode=doc.activeNode().blendingMode(),
             )
-            if dialog.exec_() == QDialog.Accepted:
+            result = dialog.exec_()
+
+            # Resume gesture if we paused it
+            if should_resume_gesture:
+                resume_gesture_event_filter()
+
+            if result == QDialog.Accepted:
                 # Get values from dialog
                 (node_name, blending_mode, hide_original, add_to_group) = (
                     dialog.get_values()
