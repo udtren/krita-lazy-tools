@@ -4,5 +4,5 @@ lazy_tools/models/*
 lazy_tools/config/common.json
 lazy_tools/config/name_color_list.txt
 # Stop tracking scripts folder but keep existing files
-lazy_tools/scripts/
+lazy_tools/scripts/*.py
 logs/
