@@ -156,7 +156,7 @@ Pick colors from anywhere on your screen (including other apps like PureRef) usi
 
 **Platform:** Windows only
 
-**Note:** If you don't need this feature, remove the line `from .e_scripts.color_pick import *` from `__init__.py` to disable it.
+**Note:** This feature will only be enabled in Windows OS.
 
 ### Disable Top Menu Shortcuts
 

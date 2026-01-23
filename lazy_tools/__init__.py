@@ -1,3 +1,4 @@
+import platform
 from krita import Krita, Extension  # type: ignore
 from .lazy_color import LazyColorLabel
 from .lazy_color_filter import LazyColorFilter
@@ -50,8 +51,8 @@ extensions = [
     CreateSelectionMaskPopup,
 ]
 
-# Conditionally add ScreenColorPicker based on config
-if get_script_enabled("screen_color_picker"):
+# Conditionally add ScreenColorPicker based on config (Windows only)
+if platform.system() == 'Windows' and get_script_enabled("screen_color_picker"):
     extensions.append(ScreenColorPicker)
 
 for extension_class in extensions:
