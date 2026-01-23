@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## 2026-01-23
+### Changed
+- Screen Color Picker is now only loaded on Windows OS
+
 ## 2025-12-30
 ### Added
 - Configuration system for Lazy Tools plugin
