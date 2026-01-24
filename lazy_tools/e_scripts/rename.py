@@ -30,7 +30,7 @@ except ImportError:
 # Add parent directory to path to import from lazy_tools
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from config.config_loader import load_name_color_list, save_name_color_list
-from utils.color_scheme import ColorScheme
+from ..utils.color_scheme import ColorScheme
 
 
 class RenameDialog(QDialog):
