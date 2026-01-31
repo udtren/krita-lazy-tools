@@ -15,12 +15,13 @@ def get_default_config():
         dict: Default configuration with all scripts enabled
     """
     return {
-        "screen_color_picker": {
-            "enabled": True
+        "screen_color_picker": {"enabled": True},
+        "disable_top_menu_shortcuts": {"enabled": True},
+        "foreground_color": {
+            "color1": {"r": 136, "g": 136, "b": 136, "a": 255},
+            "color2": {"r": 136, "g": 136, "b": 136, "a": 255},
+            "color3": {"r": 136, "g": 136, "b": 136, "a": 255},
         },
-        "disable_top_menu_shortcuts": {
-            "enabled": True
-        }
     }
 
 
@@ -185,3 +186,69 @@ def save_name_color_list(content):
         return True
     except IOError:
         return False
+
+
+def get_foreground_color1():
+    """Get the foreground_color.color1 from config
+
+    Returns:
+        dict: Color with r, g, b, a keys. Returns default if not found.
+    """
+    default_color = {"r": 136, "g": 136, "b": 136, "a": 255}
+    config = load_config()
+
+    if "foreground_color" not in config:
+        config["foreground_color"] = {"color1": default_color}
+        save_config(config)
+        return default_color
+
+    if "color1" not in config["foreground_color"]:
+        config["foreground_color"]["color1"] = default_color
+        save_config(config)
+        return default_color
+
+    return config["foreground_color"]["color1"]
+
+
+def get_foreground_color2():
+    """Get the foreground_color.color2 from config
+
+    Returns:
+        dict: Color with r, g, b, a keys. Returns default if not found.
+    """
+    default_color = {"r": 136, "g": 136, "b": 136, "a": 255}
+    config = load_config()
+
+    if "foreground_color" not in config:
+        config["foreground_color"] = {"color2": default_color}
+        save_config(config)
+        return default_color
+
+    if "color2" not in config["foreground_color"]:
+        config["foreground_color"]["color2"] = default_color
+        save_config(config)
+        return default_color
+
+    return config["foreground_color"]["color2"]
+
+
+def get_foreground_color3():
+    """Get the foreground_color.color3 from config
+
+    Returns:
+        dict: Color with r, g, b, a keys. Returns default if not found.
+    """
+    default_color = {"r": 136, "g": 136, "b": 136, "a": 255}
+    config = load_config()
+
+    if "foreground_color" not in config:
+        config["foreground_color"] = {"color3": default_color}
+        save_config(config)
+        return default_color
+
+    if "color3" not in config["foreground_color"]:
+        config["foreground_color"]["color3"] = default_color
+        save_config(config)
+        return default_color
+
+    return config["foreground_color"]["color3"]
