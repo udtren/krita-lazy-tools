@@ -12,6 +12,17 @@ from .e_scripts.deselect_alt import DeselectAlternative
 from .e_scripts.selection_mask import CreateSelectionMaskAlternative
 from .e_scripts.selection_mask_popup import CreateSelectionMaskPopup
 from .e_scripts.rename import RenameAlternative
+from .e_scripts.set_color import (
+    SetForegroundColor1,
+    SetForegroundColor2,
+    SetForegroundColor3,
+    SetForegroundColor4,
+    SetForegroundColor5,
+    SetForegroundColor6,
+    SetForegroundColor7,
+    SetForegroundColor8,
+    SetForegroundColor9,
+)
 from .config.config_loader import get_script_enabled, ensure_config_exists
 
 
@@ -49,10 +60,19 @@ extensions = [
     DeselectAlternative,
     CreateSelectionMaskAlternative,
     CreateSelectionMaskPopup,
+    SetForegroundColor1,
+    SetForegroundColor2,
+    SetForegroundColor3,
+    SetForegroundColor4,
+    SetForegroundColor5,
+    SetForegroundColor6,
+    SetForegroundColor7,
+    SetForegroundColor8,
+    SetForegroundColor9,
 ]
 
 # Conditionally add ScreenColorPicker based on config (Windows only)
-if platform.system() == 'Windows' and get_script_enabled("screen_color_picker"):
+if platform.system() == "Windows" and get_script_enabled("screen_color_picker"):
     extensions.append(ScreenColorPicker)
 
 for extension_class in extensions:

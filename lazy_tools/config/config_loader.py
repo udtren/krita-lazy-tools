@@ -15,12 +15,19 @@ def get_default_config():
         dict: Default configuration with all scripts enabled
     """
     return {
-        "screen_color_picker": {
-            "enabled": True
+        "screen_color_picker": {"enabled": True},
+        "disable_top_menu_shortcuts": {"enabled": True},
+        "foreground_color": {
+            "color1": {"r": 136, "g": 136, "b": 136, "a": 255},
+            "color2": {"r": 136, "g": 136, "b": 136, "a": 255},
+            "color3": {"r": 136, "g": 136, "b": 136, "a": 255},
+            "color4": {"r": 136, "g": 136, "b": 136, "a": 255},
+            "color5": {"r": 136, "g": 136, "b": 136, "a": 255},
+            "color6": {"r": 136, "g": 136, "b": 136, "a": 255},
+            "color7": {"r": 136, "g": 136, "b": 136, "a": 255},
+            "color8": {"r": 136, "g": 136, "b": 136, "a": 255},
+            "color9": {"r": 136, "g": 136, "b": 136, "a": 255},
         },
-        "disable_top_menu_shortcuts": {
-            "enabled": True
-        }
     }
 
 
@@ -185,3 +192,66 @@ def save_name_color_list(content):
         return True
     except IOError:
         return False
+
+
+def get_foreground_color(color_num):
+    """Get the foreground_color from config by number
+
+    Args:
+        color_num (int): Color number (1, 2, or 3)
+
+    Returns:
+        dict: Color with r, g, b, a keys. Returns default if not found.
+    """
+    default_color = {"r": 136, "g": 136, "b": 136, "a": 255}
+    color_key = f"color{color_num}"
+    config = load_config()
+
+    if "foreground_color" not in config:
+        config["foreground_color"] = {color_key: default_color}
+        save_config(config)
+        return default_color
+
+    if color_key not in config["foreground_color"]:
+        config["foreground_color"][color_key] = default_color
+        save_config(config)
+        return default_color
+
+    return config["foreground_color"][color_key]
+
+
+# Convenience wrappers for backwards compatibility
+def get_foreground_color1():
+    return get_foreground_color(1)
+
+
+def get_foreground_color2():
+    return get_foreground_color(2)
+
+
+def get_foreground_color3():
+    return get_foreground_color(3)
+
+
+def get_foreground_color4():
+    return get_foreground_color(4)
+
+
+def get_foreground_color5():
+    return get_foreground_color(5)
+
+
+def get_foreground_color6():
+    return get_foreground_color(6)
+
+
+def get_foreground_color7():
+    return get_foreground_color(7)
+
+
+def get_foreground_color8():
+    return get_foreground_color(8)
+
+
+def get_foreground_color9():
+    return get_foreground_color(9)

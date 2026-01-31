@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ActionCollection version="2" name="Scripts">
+    <Actions category="Scripts">
+        <text>Lazy Tools</text>
+
+        <Action name="color_pick_alternative">
+            <icon></icon>
+            <text>Color Pick Alternative</text>
+            <iconText></iconText>
+            <activationFlags>1</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip></statusTip>
+        </Action>
+
+        <Action name="deselect_alternative">
+            <icon></icon>
+            <text>Deselect Alternative</text>
+            <iconText></iconText>
+            <activationFlags>1</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip></statusTip>
+        </Action>
+
+        <Action name="duplicate_layer_alternative">
+            <icon></icon>
+            <text>Duplicate Layer Alternative</text>
+            <iconText></iconText>
+            <activationFlags>1</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip></statusTip>
+        </Action>
+
+        <Action name="expand_all_folders">
+            <icon></icon>
+            <text>Expand All Folders</text>
+            <iconText></iconText>
+            <activationFlags>1</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip></statusTip>
+        </Action>
+
+        <Action name="folder_all_folder">
+            <icon></icon>
+            <text>Fold All Folders</text>
+            <iconText></iconText>
+            <activationFlags>1</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip></statusTip>
+        </Action>
+
+        <Action name="add_new_layer_alternative">
+            <icon></icon>
+            <text>Add New Layer Alternative</text>
+            <iconText></iconText>
+            <activationFlags>1</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip></statusTip>
+        </Action>
+
+        <Action name="rename_alternative">
+            <icon></icon>
+            <text>Rename Alternative</text>
+            <iconText></iconText>
+            <activationFlags>1</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip></statusTip>
+        </Action>
+
+        <Action name="create_selection_mask_popup">
+            <icon></icon>
+            <text>Create Selection Mask Popup</text>
+            <iconText></iconText>
+            <activationFlags>1</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip></statusTip>
+        </Action>
+
+        <Action name="create_selection_mask_alternative">
+            <icon></icon>
+            <text>Create Selection Mask Alternative</text>
+            <iconText></iconText>
+            <activationFlags>1</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip></statusTip>
+        </Action>
+
+        <Action name="set_foreground_color1">
+            <icon></icon>
+            <text>Set Foreground Color1</text>
+            <iconText></iconText>
+            <activationFlags>1</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip></statusTip>
+        </Action>
+
+        <Action name="set_foreground_color2">
+            <icon></icon>
+            <text>Set Foreground Color2</text>
+            <iconText></iconText>
+            <activationFlags>1</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip></statusTip>
+        </Action>
+
+        <Action name="set_foreground_color3">
+            <icon></icon>
+            <text>Set Foreground Color3</text>
+            <iconText></iconText>
+            <activationFlags>1</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip></statusTip>
+        </Action>
+
+        <Action name="set_foreground_color4">
+            <icon></icon>
+            <text>Set Foreground Color4</text>
+            <iconText></iconText>
+            <activationFlags>1</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip></statusTip>
+        </Action>
+
+        <Action name="set_foreground_color5">
+            <icon></icon>
+            <text>Set Foreground Color5</text>
+            <iconText></iconText>
+            <activationFlags>1</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip></statusTip>
+        </Action>
+
+        <Action name="set_foreground_color6">
+            <icon></icon>
+            <text>Set Foreground Color6</text>
+            <iconText></iconText>
+            <activationFlags>1</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip></statusTip>
+        </Action>
+
+        <Action name="set_foreground_color7">
+            <icon></icon>
+            <text>Set Foreground Color7</text>
+            <iconText></iconText>
+            <activationFlags>1</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip></statusTip>
+        </Action>
+
+        <Action name="set_foreground_color8">
+            <icon></icon>
+            <text>Set Foreground Color8</text>
+            <iconText></iconText>
+            <activationFlags>1</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip></statusTip>
+        </Action>
+
+        <Action name="set_foreground_color9">
+            <icon></icon>
+            <text>Set Foreground Color9</text>
+            <iconText></iconText>
+            <activationFlags>1</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip></statusTip>
+        </Action>
+    </Actions>
+</ActionCollection>

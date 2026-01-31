@@ -13,6 +13,7 @@ from PyQt5.QtWidgets import (
     QCheckBox,
     QFormLayout,
     QTextEdit,
+    QColorDialog,
 )
 from PyQt5.QtCore import QTimer, Qt, QSize
 from PyQt5.QtGui import QIcon, QPixmap, QColor
@@ -27,6 +28,7 @@ from lazy_tools.config.config_loader import (
     set_script_enabled,
     load_name_color_list,
     save_name_color_list,
+    get_foreground_color,
 )
 import os
 
@@ -74,7 +76,7 @@ class LazyToolsDockerWidget(QDockWidget):
         # Create collapsible Color Filter section
         ##############################
 
-        self.color_filter_section = CollapsibleSection("Color Filter", collapsed=False)
+        self.color_filter_section = CollapsibleSection("Color Filter", collapsed=True)
         self.color_filter_content = ColorFilterSection(self)
         self.color_filter_section.set_content_widget(self.color_filter_content)
 
@@ -116,7 +118,7 @@ class LazyToolsDockerWidget(QDockWidget):
         ##############################
         # Create collapsible Scripts section
         ##############################
-        self.scripts_section = CollapsibleSection("Scripts")
+        self.scripts_section = CollapsibleSection("Scripts", collapsed=True)
         self.scripts_content = ScriptsSection(self)
         self.scripts_section.set_content_widget(self.scripts_content)
 
@@ -293,12 +295,45 @@ class SettingsDialog(QDialog):
         self.checkboxes["disable_top_menu_shortcuts"] = self.disable_top_menu_checkbox
         layout.addRow(self.disable_top_menu_checkbox)
 
+        # Foreground Color settings (1-9)
+        self.colors = {}
+        self.color_buttons = {}
+        for i in range(1, 10):
+            color_data = get_foreground_color(i)
+            self.colors[i] = QColor(
+                color_data.get("r", 136),
+                color_data.get("g", 136),
+                color_data.get("b", 136),
+                color_data.get("a", 255),
+            )
+            button = QPushButton()
+            button.setFixedSize(60, 24)
+            button.clicked.connect(lambda _, num=i: self.pick_color(num))
+            self.color_buttons[i] = button
+            self.update_color_button(i)
+            layout.addRow(f"Foreground Color {i}:", button)
+
         # Add note label
         note_label = QLabel("Note: Changes will take effect after restarting Krita.")
         note_label.setStyleSheet("color: #888; font-style: italic; margin-top: 10px;")
         layout.addRow(note_label)
 
         self.common_tab.setLayout(layout)
+
+    def update_color_button(self, color_num):
+        """Update the color button background to show the selected color"""
+        self.color_buttons[color_num].setStyleSheet(
+            f"background-color: {self.colors[color_num].name()}; border: 1px solid #888;"
+        )
+
+    def pick_color(self, color_num):
+        """Open color picker dialog for the specified color"""
+        color = QColorDialog.getColor(
+            self.colors[color_num], self, f"Select Foreground Color {color_num}"
+        )
+        if color.isValid():
+            self.colors[color_num] = color
+            self.update_color_button(color_num)
 
     def setup_name_list_tab(self):
         """Setup the Name List tab"""
@@ -341,6 +376,19 @@ class SettingsDialog(QDialog):
         # Update config for each script
         for script_name, checkbox in self.checkboxes.items():
             set_script_enabled(script_name, checkbox.isChecked())
+
+        # Save foreground colors
+        config = load_config()
+        if "foreground_color" not in config:
+            config["foreground_color"] = {}
+        for i, color in self.colors.items():
+            config["foreground_color"][f"color{i}"] = {
+                "r": color.red(),
+                "g": color.green(),
+                "b": color.blue(),
+                "a": color.alpha(),
+            }
+        save_config(config)
 
         # Save name color list
         name_color_content = self.name_color_list_text.toPlainText()
