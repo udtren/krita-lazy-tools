@@ -16,6 +16,12 @@ from .e_scripts.set_color import (
     SetForegroundColor1,
     SetForegroundColor2,
     SetForegroundColor3,
+    SetForegroundColor4,
+    SetForegroundColor5,
+    SetForegroundColor6,
+    SetForegroundColor7,
+    SetForegroundColor8,
+    SetForegroundColor9,
 )
 from .config.config_loader import get_script_enabled, ensure_config_exists
 
@@ -57,6 +63,12 @@ extensions = [
     SetForegroundColor1,
     SetForegroundColor2,
     SetForegroundColor3,
+    SetForegroundColor4,
+    SetForegroundColor5,
+    SetForegroundColor6,
+    SetForegroundColor7,
+    SetForegroundColor8,
+    SetForegroundColor9,
 ]
 
 # Conditionally add ScreenColorPicker based on config (Windows only)

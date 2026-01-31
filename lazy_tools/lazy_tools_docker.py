@@ -28,9 +28,7 @@ from lazy_tools.config.config_loader import (
     set_script_enabled,
     load_name_color_list,
     save_name_color_list,
-    get_foreground_color1,
-    get_foreground_color2,
-    get_foreground_color3,
+    get_foreground_color,
 )
 import os
 
@@ -297,47 +295,23 @@ class SettingsDialog(QDialog):
         self.checkboxes["disable_top_menu_shortcuts"] = self.disable_top_menu_checkbox
         layout.addRow(self.disable_top_menu_checkbox)
 
-        # Foreground Color 1 setting
-        color1_data = get_foreground_color1()
-        self.color1 = QColor(
-            color1_data.get("r", 136),
-            color1_data.get("g", 136),
-            color1_data.get("b", 136),
-            color1_data.get("a", 255),
-        )
-        self.color1_button = QPushButton()
-        self.color1_button.setFixedSize(60, 24)
-        self.update_color_button1()
-        self.color1_button.clicked.connect(self.pick_color1)
-        layout.addRow("Foreground Color 1:", self.color1_button)
-
-        # Foreground Color 2 setting
-        color2_data = get_foreground_color2()
-        self.color2 = QColor(
-            color2_data.get("r", 136),
-            color2_data.get("g", 136),
-            color2_data.get("b", 136),
-            color2_data.get("a", 255),
-        )
-        self.color2_button = QPushButton()
-        self.color2_button.setFixedSize(60, 24)
-        self.update_color_button2()
-        self.color2_button.clicked.connect(self.pick_color2)
-        layout.addRow("Foreground Color 2:", self.color2_button)
-
-        # Foreground Color 3 setting
-        color3_data = get_foreground_color3()
-        self.color3 = QColor(
-            color3_data.get("r", 136),
-            color3_data.get("g", 136),
-            color3_data.get("b", 136),
-            color3_data.get("a", 255),
-        )
-        self.color3_button = QPushButton()
-        self.color3_button.setFixedSize(60, 24)
-        self.update_color_button3()
-        self.color3_button.clicked.connect(self.pick_color3)
-        layout.addRow("Foreground Color 3:", self.color3_button)
+        # Foreground Color settings (1-9)
+        self.colors = {}
+        self.color_buttons = {}
+        for i in range(1, 10):
+            color_data = get_foreground_color(i)
+            self.colors[i] = QColor(
+                color_data.get("r", 136),
+                color_data.get("g", 136),
+                color_data.get("b", 136),
+                color_data.get("a", 255),
+            )
+            button = QPushButton()
+            button.setFixedSize(60, 24)
+            button.clicked.connect(lambda _, num=i: self.pick_color(num))
+            self.color_buttons[i] = button
+            self.update_color_button(i)
+            layout.addRow(f"Foreground Color {i}:", button)
 
         # Add note label
         note_label = QLabel("Note: Changes will take effect after restarting Krita.")
@@ -346,44 +320,20 @@ class SettingsDialog(QDialog):
 
         self.common_tab.setLayout(layout)
 
-    def update_color_button1(self):
+    def update_color_button(self, color_num):
         """Update the color button background to show the selected color"""
-        self.color1_button.setStyleSheet(
-            f"background-color: {self.color1.name()}; border: 1px solid #888;"
+        self.color_buttons[color_num].setStyleSheet(
+            f"background-color: {self.colors[color_num].name()}; border: 1px solid #888;"
         )
 
-    def pick_color1(self):
-        """Open color picker dialog for color1"""
-        color = QColorDialog.getColor(self.color1, self, "Select Foreground Color 1")
-        if color.isValid():
-            self.color1 = color
-            self.update_color_button1()
-
-    def update_color_button2(self):
-        """Update the color button background to show the selected color"""
-        self.color2_button.setStyleSheet(
-            f"background-color: {self.color2.name()}; border: 1px solid #888;"
+    def pick_color(self, color_num):
+        """Open color picker dialog for the specified color"""
+        color = QColorDialog.getColor(
+            self.colors[color_num], self, f"Select Foreground Color {color_num}"
         )
-
-    def pick_color2(self):
-        """Open color picker dialog for color2"""
-        color = QColorDialog.getColor(self.color2, self, "Select Foreground Color 2")
         if color.isValid():
-            self.color2 = color
-            self.update_color_button2()
-
-    def update_color_button3(self):
-        """Update the color button background to show the selected color"""
-        self.color3_button.setStyleSheet(
-            f"background-color: {self.color3.name()}; border: 1px solid #888;"
-        )
-
-    def pick_color3(self):
-        """Open color picker dialog for color3"""
-        color = QColorDialog.getColor(self.color3, self, "Select Foreground Color 3")
-        if color.isValid():
-            self.color3 = color
-            self.update_color_button3()
+            self.colors[color_num] = color
+            self.update_color_button(color_num)
 
     def setup_name_list_tab(self):
         """Setup the Name List tab"""
@@ -427,28 +377,17 @@ class SettingsDialog(QDialog):
         for script_name, checkbox in self.checkboxes.items():
             set_script_enabled(script_name, checkbox.isChecked())
 
-        # Save foreground color1
+        # Save foreground colors
         config = load_config()
         if "foreground_color" not in config:
             config["foreground_color"] = {}
-        config["foreground_color"]["color1"] = {
-            "r": self.color1.red(),
-            "g": self.color1.green(),
-            "b": self.color1.blue(),
-            "a": self.color1.alpha(),
-        }
-        config["foreground_color"]["color2"] = {
-            "r": self.color2.red(),
-            "g": self.color2.green(),
-            "b": self.color2.blue(),
-            "a": self.color2.alpha(),
-        }
-        config["foreground_color"]["color3"] = {
-            "r": self.color3.red(),
-            "g": self.color3.green(),
-            "b": self.color3.blue(),
-            "a": self.color3.alpha(),
-        }
+        for i, color in self.colors.items():
+            config["foreground_color"][f"color{i}"] = {
+                "r": color.red(),
+                "g": color.green(),
+                "b": color.blue(),
+                "a": color.alpha(),
+            }
         save_config(config)
 
         # Save name color list

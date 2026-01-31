@@ -134,5 +134,71 @@
             <isCheckable>false</isCheckable>
             <statusTip></statusTip>
         </Action>
+
+        <Action name="set_foreground_color4">
+            <icon></icon>
+            <text>Set Foreground Color4</text>
+            <iconText></iconText>
+            <activationFlags>1</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip></statusTip>
+        </Action>
+
+        <Action name="set_foreground_color5">
+            <icon></icon>
+            <text>Set Foreground Color5</text>
+            <iconText></iconText>
+            <activationFlags>1</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip></statusTip>
+        </Action>
+
+        <Action name="set_foreground_color6">
+            <icon></icon>
+            <text>Set Foreground Color6</text>
+            <iconText></iconText>
+            <activationFlags>1</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip></statusTip>
+        </Action>
+
+        <Action name="set_foreground_color7">
+            <icon></icon>
+            <text>Set Foreground Color7</text>
+            <iconText></iconText>
+            <activationFlags>1</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip></statusTip>
+        </Action>
+
+        <Action name="set_foreground_color8">
+            <icon></icon>
+            <text>Set Foreground Color8</text>
+            <iconText></iconText>
+            <activationFlags>1</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip></statusTip>
+        </Action>
+
+        <Action name="set_foreground_color9">
+            <icon></icon>
+            <text>Set Foreground Color9</text>
+            <iconText></iconText>
+            <activationFlags>1</activationFlags>
+            <activationConditions>0</activationConditions>
+            <shortcut></shortcut>
+            <isCheckable>false</isCheckable>
+            <statusTip></statusTip>
+        </Action>
     </Actions>
 </ActionCollection>

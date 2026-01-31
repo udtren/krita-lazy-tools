@@ -77,6 +77,7 @@ A collection of scripts to speed up workflow.
 - Selection Mask
 - Selection Mask Popup
 - Deselect
+- Set Foreground Color
 
 Go to `Settings > Configure Krita > Keyboard Shortcuts` and search for:
 - "Add New Layer Alternative"
@@ -87,6 +88,7 @@ Go to `Settings > Configure Krita > Keyboard Shortcuts` and search for:
 - "Create Selection Mask Alternative"
 - "Create Selection Mask Popup"
 - "Deselect Alternative"
+- "Set Foreground Color 1-9"
 
 ### Add New Layer
 ![add new layer](lazy_tools/images/new_layer.png)
@@ -172,6 +174,14 @@ Opens a popup window displaying all masks inside the `Selection_Mask_Group`. Cli
 
 ### Deselect Alternative
 Deselect and Switch to Freehand Brush Tool in one action.
+
+### Set Foreground Color 1-9
+
+Quickly switch to preset foreground colors.
+
+- 9 customizable color slots available
+- Configure colors via Settings dialog (gear icon in Lazy Tools docker)
+- Assign keyboard shortcuts in `Settings > Configure Krita > Keyboard Shortcuts`
 
 ## Florence-2 + SAM2.1 AI Segmentation
 
