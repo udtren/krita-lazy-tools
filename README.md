@@ -26,6 +26,7 @@ If you find this tool helpful, you can support its development:
   - [Selection Mask Alternative](#selection-mask-alternative)
   - [Selection Mask Popup](#selection-mask-popup)
   - [Deselect Alternative](#deselect-alternative)
+  - [Set Foreground Color](#set-foreground-color-1-9)
 - [Florence-2 + SAM2.1 AI Segmentation](#florence-2--sam21-ai-segmentation)
   - [Key Features](#key-features)
   - [How to Use](#how-to-use)
