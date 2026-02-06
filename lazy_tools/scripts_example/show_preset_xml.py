@@ -129,7 +129,7 @@ def show_current_preset_xml():
 
         # Create and show dialog
         dialog = PresetXMLDialog(cleaned_xml, preset_name)
-        dialog.exec_()
+        dialog.exec()
 
     except Exception as e:
         print(f"Error showing preset XML: {e}")

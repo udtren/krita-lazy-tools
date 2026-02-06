@@ -292,7 +292,7 @@ def rename_alt():
     # Move dialog to cursor position
     dialog.move(cursor_pos)
 
-    dialog.exec_()
+    dialog.exec()
 
     # Resume gesture if we paused it
     if should_resume_gesture:

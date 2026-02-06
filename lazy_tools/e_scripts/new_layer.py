@@ -204,7 +204,7 @@ class AddNewLayerExtension(Extension):
 
             # Show dialog
             dialog = NewLayerDialog()
-            result = dialog.exec_()
+            result = dialog.exec()
 
             # Resume gesture if we paused it
             if should_resume_gesture:

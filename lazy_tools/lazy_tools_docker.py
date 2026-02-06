@@ -216,7 +216,7 @@ class LazyToolsDockerWidget(QDockWidget):
             should_resume_gesture = True
 
         dialog = SettingsDialog(self)
-        dialog.exec_()
+        dialog.exec()
 
         # Resume gesture if we paused it
         if should_resume_gesture:

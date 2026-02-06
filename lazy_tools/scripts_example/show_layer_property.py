@@ -105,4 +105,4 @@ class FilterConfigViewer(QDialog):
 
 # Create and show the dialog
 dialog = FilterConfigViewer()
-dialog.exec_()
+dialog.exec()

@@ -129,7 +129,7 @@ class DuplicateLayerExtension(Extension):
                 name=doc.activeNode().name(),
                 blendingMode=doc.activeNode().blendingMode(),
             )
-            result = dialog.exec_()
+            result = dialog.exec()
 
             # Resume gesture if we paused it
             if should_resume_gesture:
