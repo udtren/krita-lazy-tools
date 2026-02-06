@@ -55,6 +55,7 @@ class PresetXMLDialog(QDialog):
     def copy_to_clipboard(self):
         """Copy the XML content to clipboard"""
         from PyQt6.QtWidgets import QApplication
+
         clipboard = QApplication.clipboard()
         clipboard.setText(self.text_edit.toPlainText())
 
@@ -82,9 +83,9 @@ def remove_cdata_from_xml(xml_string):
     # Replace CDATA content with a placeholder, keeping the resource tag structure
     cleaned_xml = re.sub(
         pattern,
-        r'\1<![CDATA[[REMOVED - Contains large image data]]]>\2',
+        r"\1<![CDATA[[REMOVED - Contains large image data]]]>\2",
         xml_string,
-        flags=re.DOTALL
+        flags=re.DOTALL,
     )
 
     return cleaned_xml
@@ -133,6 +134,7 @@ def show_current_preset_xml():
     except Exception as e:
         print(f"Error showing preset XML: {e}")
         import traceback
+
         traceback.print_exc()
 
 
