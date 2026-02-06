@@ -442,7 +442,7 @@ class CollapsibleSection(QWidget):
 
         # Create content frame
         self.content_frame = QFrame()
-        self.content_frame.setFrameStyle(QFrame.Box | QFrame.Raised)
+        self.content_frame.setFrameStyle(QFrame.Shape.Box | QFrame.Shadow.Raised)
         self.content_frame.setStyleSheet("QFrame { border: 1px solid #888; }")
         self.content_layout = QVBoxLayout()
         self.content_layout.setContentsMargins(1, 1, 1, 1)
