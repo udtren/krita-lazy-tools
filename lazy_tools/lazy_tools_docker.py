@@ -1,6 +1,6 @@
 from typing import Optional, List, Dict
 from krita import DockWidgetFactory, DockWidgetFactoryBase, Krita, Node  # type: ignore
-from PyQt5.QtWidgets import (
+from PyQt6.QtWidgets import (
     QWidget,
     QVBoxLayout,
     QHBoxLayout,
@@ -15,8 +15,8 @@ from PyQt5.QtWidgets import (
     QTextEdit,
     QColorDialog,
 )
-from PyQt5.QtCore import QTimer, Qt, QSize
-from PyQt5.QtGui import QIcon, QPixmap, QColor
+from PyQt6.QtCore import QTimer, Qt, QSize
+from PyQt6.QtGui import QIcon, QPixmap, QColor
 from lazy_tools.widgets.color_filter_widgets import ColorFilterSection
 from lazy_tools.widgets.scripts_widgets import ScriptsSection
 from lazy_tools.widgets.segment_widgets import SegmentSection

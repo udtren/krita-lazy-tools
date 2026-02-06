@@ -2,7 +2,7 @@ import uuid
 import os
 import sys
 from krita import Krita, Extension, InfoObject, Selection
-from PyQt5.QtWidgets import (
+from PyQt6.QtWidgets import (
     QDialog,
     QVBoxLayout,
     QHBoxLayout,

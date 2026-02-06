@@ -1,5 +1,5 @@
-from PyQt5.QtGui import QColor
-from PyQt5.QtCore import Qt, QSize
+from PyQt6.QtGui import QColor
+from PyQt6.QtCore import Qt, QSize
 
 
 class ColorScheme:
@@ -7,7 +7,7 @@ class ColorScheme:
 
     # Color definitions with their corresponding indices
     COLORS = {
-        0: QColor(Qt.transparent),  # None/Transparent
+        0: QColor(Qt.GlobalColor.transparent),  # None/Transparent
         1: QColor(91, 173, 220),  # Blue
         2: QColor(151, 202, 63),  # Green
         3: QColor(247, 229, 61),  # Yellow

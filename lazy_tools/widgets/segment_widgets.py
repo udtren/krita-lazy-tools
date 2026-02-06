@@ -9,7 +9,7 @@ import tempfile
 import threading
 from typing import Optional
 from krita import Krita, Document, Node  # type: ignore
-from PyQt5.QtWidgets import (
+from PyQt6.QtWidgets import (
     QWidget,
     QVBoxLayout,
     QHBoxLayout,
@@ -23,8 +23,8 @@ from PyQt5.QtWidgets import (
     QButtonGroup,
     QComboBox,
 )
-from PyQt5.QtCore import QThread, pyqtSignal, Qt
-from PyQt5.QtGui import QFont
+from PyQt6.QtCore import QThread, pyqtSignal, Qt
+from PyQt6.QtGui import QFont
 
 # Import configuration from widgets package
 from . import (
@@ -348,12 +348,12 @@ class SegmentSection(QWidget):
                 pixel_data = doc.pixelData(0, 0, width, height)
 
                 # Convert to QImage
-                from PyQt5.QtGui import QImage
+                from PyQt6.QtGui import QImage
 
-                qimage = QImage(pixel_data, width, height, QImage.Format_ARGB32)
+                qimage = QImage(pixel_data, width, height, QImage.Format.Format_ARGB32)
 
                 # Convert ARGB to RGB for better compatibility
-                rgb_image = qimage.convertToFormat(QImage.Format_RGB32)
+                rgb_image = qimage.convertToFormat(QImage.Format.Format_RGB32)
 
                 # Save as PNG
                 if not rgb_image.save(input_path, "PNG"):
@@ -452,8 +452,8 @@ class SegmentSection(QWidget):
             paint_layer = doc.createNode(layer_name, "paintLayer")
 
             # Convert QImage to the format Krita expects
-            if qimage.format() != QImage.Format_ARGB32:
-                qimage = qimage.convertToFormat(QImage.Format_ARGB32)
+            if qimage.format() != QImage.Format.Format_ARGB32:
+                qimage = qimage.convertToFormat(QImage.Format.Format_ARGB32)
 
             # Get image dimensions
             width = qimage.width()

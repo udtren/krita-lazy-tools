@@ -1,6 +1,6 @@
 import uuid
 from krita import Krita, Extension
-from PyQt5.QtWidgets import (
+from PyQt6.QtWidgets import (
     QDialog,
     QVBoxLayout,
     QHBoxLayout,

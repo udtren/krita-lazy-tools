@@ -6,8 +6,8 @@ This extension adds a color label dropdown to the Layer Docker for quick layer c
 
 from typing import List, Optional
 from krita import Krita, Extension, Node  # type: ignore
-from PyQt5.QtWidgets import QComboBox, QHBoxLayout
-from PyQt5.QtGui import QIcon, QPixmap, QColor, QPainter, QPen
+from PyQt6.QtWidgets import QComboBox, QHBoxLayout
+from PyQt6.QtGui import QIcon, QPixmap, QColor, QPainter, QPen
 from lazy_tools.utils.layer_utils import get_current_layer, get_selected_layers
 from lazy_tools.utils.color_scheme import ColorScheme
 

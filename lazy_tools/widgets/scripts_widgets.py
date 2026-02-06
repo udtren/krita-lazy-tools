@@ -7,7 +7,7 @@ This module contains widgets for executing custom Python scripts.
 import os
 from typing import List
 from krita import Krita  # type: ignore
-from PyQt5.QtWidgets import (
+from PyQt6.QtWidgets import (
     QWidget,
     QVBoxLayout,
     QHBoxLayout,
@@ -15,8 +15,8 @@ from PyQt5.QtWidgets import (
     QLabel,
     QScrollArea,
 )
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QIcon, QPixmap, QColor
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QIcon, QPixmap, QColor
 from lazy_tools.utils.color_scheme import ColorScheme
 
 
@@ -106,7 +106,7 @@ class ScriptsSection(QWidget):
             no_scripts_label.setStyleSheet(
                 "QLabel { color: #7065a7; font-style: italic; padding: 10px; }"
             )
-            no_scripts_label.setAlignment(Qt.AlignCenter)
+            no_scripts_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
             self.scripts_layout.addWidget(no_scripts_label)
         else:
             # Create button for each script

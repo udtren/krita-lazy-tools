@@ -1,5 +1,5 @@
 from krita import *
-from PyQt5.QtWidgets import (
+from PyQt6.QtWidgets import (
     QDialog,
     QGridLayout,
     QLabel,
@@ -8,8 +8,8 @@ from PyQt5.QtWidgets import (
     QWidget,
     QVBoxLayout,
 )
-from PyQt5.QtCore import Qt, QSize
-from PyQt5.QtGui import QPixmap, QIcon
+from PyQt6.QtCore import Qt, QSize
+from PyQt6.QtGui import QPixmap, QIcon
 
 
 class SelectionMaskThumbnailButton(QPushButton):
@@ -83,7 +83,7 @@ class SelectionMaskPopup(QDialog):
         """Load all selection masks from the selection_mask_group"""
         if not self.doc:
             label = QLabel("No active document")
-            label.setAlignment(Qt.AlignCenter)
+            label.setAlignment(Qt.AlignmentFlag.AlignCenter)
             self.grid_layout.addWidget(label, 0, 0, 1, 4)
             return
 
@@ -92,7 +92,7 @@ class SelectionMaskPopup(QDialog):
 
         if not selection_mask_group:
             label = QLabel("No 'Selection_Mask_Group' found")
-            label.setAlignment(Qt.AlignCenter)
+            label.setAlignment(Qt.AlignmentFlag.AlignCenter)
             self.grid_layout.addWidget(label, 0, 0, 1, 4)
             return
 
@@ -101,7 +101,7 @@ class SelectionMaskPopup(QDialog):
 
         if not selection_masks:
             label = QLabel("No selection masks found")
-            label.setAlignment(Qt.AlignCenter)
+            label.setAlignment(Qt.AlignmentFlag.AlignCenter)
             self.grid_layout.addWidget(label, 0, 0, 1, 4)
             return
 

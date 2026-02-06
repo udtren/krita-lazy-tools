@@ -7,8 +7,8 @@ This extension adds a script dropdown to the Layer Docker for running custom scr
 import os
 from typing import Optional, List
 from krita import Krita, Extension  # type: ignore
-from PyQt5.QtWidgets import QComboBox, QHBoxLayout
-from PyQt5.QtGui import QIcon, QPixmap, QColor
+from PyQt6.QtWidgets import QComboBox, QHBoxLayout
+from PyQt6.QtGui import QIcon, QPixmap, QColor
 from lazy_tools.utils.color_scheme import ColorScheme
 
 

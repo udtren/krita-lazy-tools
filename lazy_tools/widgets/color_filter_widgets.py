@@ -1,14 +1,14 @@
 from typing import Dict
 from krita import Krita, Node  # type: ignore
-from PyQt5.QtWidgets import (
+from PyQt6.QtWidgets import (
     QWidget,
     QVBoxLayout,
     QHBoxLayout,
     QPushButton,
     QLabel,
 )
-from PyQt5.QtCore import Qt, QTimer
-from PyQt5.QtGui import QPixmap, QColor
+from PyQt6.QtCore import Qt, QTimer
+from PyQt6.QtGui import QPixmap, QColor
 from lazy_tools.utils.color_scheme import ColorScheme
 
 # from lazy_tools.utils.logs import write_log
@@ -145,12 +145,12 @@ class ColorFilterRow(QWidget):
 
     def on_label_clicked(self, event):
         """Handle clicks on the label: Shift+click shows opacity popup, Ctrl+right click removes."""
-        from PyQt5.QtCore import Qt
-        from PyQt5.QtGui import QCursor
+        from PyQt6.QtCore import Qt
+        from PyQt6.QtGui import QCursor
 
         try:
             # Check if it's Shift+click
-            if event.modifiers() & Qt.ShiftModifier:
+            if event.modifiers() & Qt.KeyboardModifier.ShiftModifier:
                 # Show opacity popup at cursor position
                 cursor_pos = QCursor.pos()
                 self.opacity_popup = OpacityPopup(self, cursor_pos)
@@ -249,8 +249,8 @@ class OpacityPopup(QWidget):
     def __init__(self, parent_row, cursor_pos):
         super().__init__(None)  # No parent to make it a top-level window
         self.parent_row = parent_row
-        self.setWindowFlags(Qt.Popup | Qt.FramelessWindowHint)
-        self.setAttribute(Qt.WA_DeleteOnClose)
+        self.setWindowFlags(Qt.WindowType.Popup | Qt.WindowType.FramelessWindowHint)
+        self.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
 
         # Setup UI
         layout = QHBoxLayout()

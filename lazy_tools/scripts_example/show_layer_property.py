@@ -1,5 +1,5 @@
 from krita import Krita
-from PyQt5.QtWidgets import (
+from PyQt6.QtWidgets import (
     QDialog,
     QVBoxLayout,
     QLabel,
@@ -7,7 +7,7 @@ from PyQt5.QtWidgets import (
     QTextEdit,
     QWidget,
 )
-from PyQt5.QtCore import Qt
+from PyQt6.QtCore import Qt
 
 
 class FilterConfigViewer(QDialog):
@@ -21,7 +21,7 @@ class FilterConfigViewer(QDialog):
 
         # Title label
         self.title_label = QLabel("<b>Current Filter Layer Information</b>")
-        self.title_label.setAlignment(Qt.AlignCenter)
+        self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         layout.addWidget(self.title_label)
 
         # Filter name label

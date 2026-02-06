@@ -4,9 +4,9 @@ Picks colors from anywhere on screen (including PureRef) with a global hotkey
 """
 
 from krita import *
-from PyQt5.QtCore import QTimer, Qt, QThread, pyqtSignal
-from PyQt5.QtWidgets import QApplication, QWidget
-from PyQt5.QtGui import QScreen, QColor, QCursor, QPainter, QPen
+from PyQt6.QtCore import QTimer, Qt, QThread, pyqtSignal
+from PyQt6.QtWidgets import QApplication, QWidget
+from PyQt6.QtGui import QScreen, QColor, QCursor, QPainter, QPen
 import sys
 
 try:

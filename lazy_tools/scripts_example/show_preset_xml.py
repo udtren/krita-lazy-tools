@@ -6,8 +6,8 @@ The XML data is retrieved using Krita's Preset.toXML() method.
 """
 
 from krita import Krita, Preset
-from PyQt5.QtWidgets import QDialog, QVBoxLayout, QTextEdit, QPushButton, QHBoxLayout
-from PyQt5.QtCore import Qt
+from PyQt6.QtWidgets import QDialog, QVBoxLayout, QTextEdit, QPushButton, QHBoxLayout
+from PyQt6.QtCore import Qt
 
 
 class PresetXMLDialog(QDialog):
@@ -54,7 +54,7 @@ class PresetXMLDialog(QDialog):
 
     def copy_to_clipboard(self):
         """Copy the XML content to clipboard"""
-        from PyQt5.QtWidgets import QApplication
+        from PyQt6.QtWidgets import QApplication
         clipboard = QApplication.clipboard()
         clipboard.setText(self.text_edit.toPlainText())
 
