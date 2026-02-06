@@ -494,7 +494,7 @@ class CollapsibleSection(QWidget):
 class LazyToolsDockerFactory(DockWidgetFactoryBase):
 
     def __init__(self):
-        super().__init__("LazyToolsDocker", DockWidgetFactory.DockRight)
+        super().__init__("LazyToolsDocker", DockWidgetFactory.DockPosition.DockRight)
 
     def createDockWidget(self):
         return LazyToolsDockerWidget()
