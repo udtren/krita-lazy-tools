@@ -6,8 +6,7 @@ This extension adds a color filter dropdown to the Layer Docker for showing/hidi
 
 from typing import Optional
 from krita import Krita, Extension, Node  # type: ignore
-from PyQt5.QtWidgets import QComboBox, QHBoxLayout
-from PyQt5.QtGui import QIcon, QPixmap, QColor
+from .compat import QComboBox, QHBoxLayout, QIcon, QPixmap, QColor
 from lazy_tools.utils.color_scheme import ColorScheme
 
 

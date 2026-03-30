@@ -2,10 +2,40 @@ import os
 import json
 
 
+def _get_krita_data_dir():
+    """Get the Krita appdata directory (e.g. AppData/Roaming/krita).
+
+    Computed by navigating up from pykrita/lazy_tools/config/.
+    """
+    # __file__ => krita/pykrita/lazy_tools/config/config_loader.py
+    config_dir = os.path.dirname(os.path.abspath(__file__))
+    plugin_dir = os.path.dirname(config_dir)   # .../lazy_tools/
+    pykrita_dir = os.path.dirname(plugin_dir)  # .../pykrita/
+    return os.path.dirname(pykrita_dir)        # .../krita/
+
+
+def _get_user_data_dir():
+    """Get the lazy_tools user data directory outside of pykrita.
+
+    Returns path like: AppData/Roaming/krita/lazy_tools
+    """
+    data_dir = os.path.join(_get_krita_data_dir(), "lazy_tools", "config")
+    os.makedirs(data_dir, exist_ok=True)
+    return data_dir
+
+
 def get_config_path():
     """Get the path to the common.json configuration file"""
-    config_dir = os.path.dirname(__file__)
-    return os.path.join(config_dir, "common.json")
+    return os.path.join(_get_user_data_dir(), "common.json")
+
+
+def get_icon_dir():
+    """Get the path to the system icon directory inside the plugin.
+
+    Returns path like: pykrita/lazy_tools/config/icon
+    """
+    config_dir = os.path.dirname(os.path.abspath(__file__))
+    return os.path.join(config_dir, "icon")
 
 
 def get_default_config():
@@ -38,14 +68,6 @@ def ensure_config_exists():
         bool: True if config exists or was created successfully, False on error
     """
     config_path = get_config_path()
-    config_dir = os.path.dirname(config_path)
-
-    # Create config directory if it doesn't exist
-    if not os.path.exists(config_dir):
-        try:
-            os.makedirs(config_dir)
-        except OSError:
-            return False
 
     # Create default config file if it doesn't exist
     if not os.path.exists(config_path):
@@ -54,10 +76,10 @@ def ensure_config_exists():
             return False
 
     # Create name_color_list.txt if it doesn't exist
-    name_color_list_path = os.path.join(config_dir, "name_color_list.txt")
+    name_color_list_path = get_name_color_list_path()
     if not os.path.exists(name_color_list_path):
         try:
-            with open(name_color_list_path, "w", encoding="utf-8") as f:
+            with open(name_color_list_path, "w", encoding="utf-8"):
                 pass  # Create empty file
         except IOError:
             return False
@@ -153,8 +175,7 @@ def get_name_color_list_path():
     Returns:
         str: Absolute path to the name_color_list.txt file
     """
-    config_dir = os.path.dirname(__file__)
-    return os.path.join(config_dir, "name_color_list.txt")
+    return os.path.join(_get_user_data_dir(), "name_color_list.txt")
 
 
 def load_name_color_list():

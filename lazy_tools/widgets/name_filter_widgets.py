@@ -1,15 +1,9 @@
 from typing import Dict
 from krita import *  # type: ignore
-from PyQt5.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
-    QHBoxLayout,
-    QPushButton,
-    QLabel,
-    QLineEdit,
+from ..compat import (
+    QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QLineEdit,
+    Qt, QTimer, QPoint, QPixmap, QColor, QCursor,
 )
-from PyQt5.QtCore import Qt, QTimer, QPoint
-from PyQt5.QtGui import QPixmap, QColor, QCursor
 from lazy_tools.utils.color_scheme import ColorScheme
 
 # from lazy_tools.utils.logs import write_log
@@ -220,9 +214,6 @@ class NameFilterRow(QWidget):
 
     def on_label_clicked(self, event):
         """Handle clicks on the label: Shift+click shows opacity popup, Ctrl+right click removes."""
-        from PyQt5.QtCore import Qt
-        from PyQt5.QtGui import QCursor
-
         try:
             # Check if it's Shift+click
             if event.modifiers() & Qt.ShiftModifier:

@@ -1,5 +1,4 @@
-from PyQt5.QtGui import QColor
-from PyQt5.QtCore import Qt, QSize
+from ..compat import QColor, Qt, QSize
 
 
 class ColorScheme:
