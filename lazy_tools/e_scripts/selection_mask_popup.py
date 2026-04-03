@@ -1,15 +1,8 @@
 from krita import *
-from PyQt5.QtWidgets import (
-    QDialog,
-    QGridLayout,
-    QLabel,
-    QPushButton,
-    QScrollArea,
-    QWidget,
-    QVBoxLayout,
+from ..compat import (
+    QDialog, QGridLayout, QLabel, QPushButton, QScrollArea, QWidget,
+    QVBoxLayout, Qt, QSize, QPixmap, QIcon,
 )
-from PyQt5.QtCore import Qt, QSize
-from PyQt5.QtGui import QPixmap, QIcon
 
 
 class SelectionMaskThumbnailButton(QPushButton):

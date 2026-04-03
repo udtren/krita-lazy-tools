@@ -7,16 +7,10 @@ This module contains widgets for executing custom Python scripts.
 import os
 from typing import List
 from krita import Krita  # type: ignore
-from PyQt5.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
-    QHBoxLayout,
-    QPushButton,
-    QLabel,
-    QScrollArea,
+from ..compat import (
+    QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QScrollArea,
+    Qt, QIcon, QPixmap, QColor,
 )
-from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QIcon, QPixmap, QColor
 from lazy_tools.utils.color_scheme import ColorScheme
 
 

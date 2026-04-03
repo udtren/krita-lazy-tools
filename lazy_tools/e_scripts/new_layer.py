@@ -2,15 +2,9 @@ import uuid
 import os
 import sys
 from krita import Krita, Extension, InfoObject, Selection
-from PyQt5.QtWidgets import (
-    QDialog,
-    QVBoxLayout,
-    QHBoxLayout,
-    QLabel,
-    QLineEdit,
-    QComboBox,
-    QPushButton,
-    QCheckBox,
+from ..compat import (
+    QDialog, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit,
+    QComboBox, QPushButton, QCheckBox,
 )
 
 try:
@@ -204,7 +198,7 @@ class AddNewLayerExtension(Extension):
 
             # Show dialog
             dialog = NewLayerDialog()
-            result = dialog.exec_()
+            result = dialog.exec()
 
             # Resume gesture if we paused it
             if should_resume_gesture:

@@ -1,14 +1,8 @@
 import uuid
 from krita import Krita, Extension
-from PyQt5.QtWidgets import (
-    QDialog,
-    QVBoxLayout,
-    QHBoxLayout,
-    QLabel,
-    QLineEdit,
-    QComboBox,
-    QPushButton,
-    QCheckBox,
+from ..compat import (
+    QDialog, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit,
+    QComboBox, QPushButton, QCheckBox,
 )
 
 try:
@@ -129,7 +123,7 @@ class DuplicateLayerExtension(Extension):
                 name=doc.activeNode().name(),
                 blendingMode=doc.activeNode().blendingMode(),
             )
-            result = dialog.exec_()
+            result = dialog.exec()
 
             # Resume gesture if we paused it
             if should_resume_gesture:

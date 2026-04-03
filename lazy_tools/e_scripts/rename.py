@@ -1,18 +1,9 @@
 from krita import *
-from PyQt5.QtWidgets import (
-    QDialog,
-    QVBoxLayout,
-    QHBoxLayout,
-    QListWidget,
-    QListWidgetItem,
-    QApplication,
-    QComboBox,
-    QLineEdit,
-    QCheckBox,
-    QPushButton,
+from ..compat import (
+    QDialog, QVBoxLayout, QHBoxLayout, QListWidget, QListWidgetItem,
+    QApplication, QComboBox, QLineEdit, QCheckBox, QPushButton,
+    Qt, QSize, QPixmap, QIcon, QCursor, QColor,
 )
-from PyQt5.QtCore import Qt, QSize
-from PyQt5.QtGui import QPixmap, QIcon, QCursor, QColor
 import os
 import sys
 
@@ -292,7 +283,7 @@ def rename_alt():
     # Move dialog to cursor position
     dialog.move(cursor_pos)
 
-    dialog.exec_()
+    dialog.exec()
 
     # Resume gesture if we paused it
     if should_resume_gesture:

@@ -1,22 +1,10 @@
 from typing import Optional, List, Dict
-from krita import DockWidgetFactory, DockWidgetFactoryBase, Krita, Node  # type: ignore
-from PyQt5.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
-    QHBoxLayout,
-    QPushButton,
-    QLabel,
-    QDockWidget,
-    QFrame,
-    QDialog,
-    QTabWidget,
-    QCheckBox,
-    QFormLayout,
-    QTextEdit,
-    QColorDialog,
+from krita import DockWidgetFactoryBase, Krita  # type: ignore
+from .compat import (
+    QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QDockWidget,
+    QFrame, QDialog, QTabWidget, QCheckBox, QFormLayout, QTextEdit,
+    QColorDialog, QTimer, QSize, QIcon, QColor,
 )
-from PyQt5.QtCore import QTimer, Qt, QSize
-from PyQt5.QtGui import QIcon, QPixmap, QColor
 from lazy_tools.widgets.color_filter_widgets import ColorFilterSection
 from lazy_tools.widgets.scripts_widgets import ScriptsSection
 from lazy_tools.widgets.segment_widgets import SegmentSection
@@ -29,6 +17,7 @@ from lazy_tools.config.config_loader import (
     load_name_color_list,
     save_name_color_list,
     get_foreground_color,
+    get_icon_dir,
 )
 import os
 
@@ -135,9 +124,7 @@ class LazyToolsDockerWidget(QDockWidget):
         settings_button_layout.setContentsMargins(0, 0, 0, 0)
 
         self.settings_button = QPushButton()
-        icon_path = os.path.join(
-            os.path.dirname(__file__), "config", "icon", "setting.png"
-        )
+        icon_path = os.path.join(get_icon_dir(), "setting.png")
         self.settings_button.setIcon(QIcon(icon_path))
         self.settings_button.setIconSize(QSize(18, 18))
         self.settings_button.setFixedSize(24, 24)
@@ -216,7 +203,7 @@ class LazyToolsDockerWidget(QDockWidget):
             should_resume_gesture = True
 
         dialog = SettingsDialog(self)
-        dialog.exec_()
+        dialog.exec()
 
         # Resume gesture if we paused it
         if should_resume_gesture:
@@ -494,7 +481,11 @@ class CollapsibleSection(QWidget):
 class LazyToolsDockerFactory(DockWidgetFactoryBase):
 
     def __init__(self):
-        super().__init__("LazyToolsDocker", DockWidgetFactory.DockRight)
+        try:
+            _dock_pos = DockWidgetFactoryBase.DockRight
+        except AttributeError:
+            _dock_pos = DockWidgetFactoryBase.DockPosition.DockRight  # Krita 6
+        super().__init__("LazyToolsDocker", _dock_pos)
 
     def createDockWidget(self):
         return LazyToolsDockerWidget()

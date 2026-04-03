@@ -9,22 +9,11 @@ import tempfile
 import threading
 from typing import Optional
 from krita import Krita, Document, Node  # type: ignore
-from PyQt5.QtWidgets import (
-    QWidget,
-    QVBoxLayout,
-    QHBoxLayout,
-    QPushButton,
-    QLineEdit,
-    QLabel,
-    QProgressBar,
-    QMessageBox,
-    QTextEdit,
-    QRadioButton,
-    QButtonGroup,
-    QComboBox,
+from ..compat import (
+    QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLineEdit, QLabel,
+    QProgressBar, QMessageBox, QTextEdit, QComboBox, QRadioButton, QButtonGroup,
+    QThread, pyqtSignal, Qt, QFont, QImage,
 )
-from PyQt5.QtCore import QThread, pyqtSignal, Qt
-from PyQt5.QtGui import QFont
 
 # Import configuration from widgets package
 from . import (
@@ -348,8 +337,6 @@ class SegmentSection(QWidget):
                 pixel_data = doc.pixelData(0, 0, width, height)
 
                 # Convert to QImage
-                from PyQt5.QtGui import QImage
-
                 qimage = QImage(pixel_data, width, height, QImage.Format_ARGB32)
 
                 # Convert ARGB to RGB for better compatibility
