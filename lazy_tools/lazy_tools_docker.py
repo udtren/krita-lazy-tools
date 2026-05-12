@@ -1,9 +1,22 @@
-from typing import Optional, List, Dict
 from krita import DockWidgetFactoryBase, Krita  # type: ignore
 from .compat import (
-    QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QDockWidget,
-    QFrame, QDialog, QTabWidget, QCheckBox, QFormLayout, QTextEdit,
-    QColorDialog, QTimer, QSize, QIcon, QColor,
+    QWidget,
+    QVBoxLayout,
+    QHBoxLayout,
+    QPushButton,
+    QLabel,
+    QDockWidget,
+    QFrame,
+    QDialog,
+    QTabWidget,
+    QCheckBox,
+    QFormLayout,
+    QTextEdit,
+    QColorDialog,
+    QTimer,
+    QSize,
+    QIcon,
+    QColor,
 )
 from lazy_tools.widgets.color_filter_widgets import ColorFilterSection
 from lazy_tools.widgets.scripts_widgets import ScriptsSection
@@ -161,28 +174,7 @@ class LazyToolsDockerWidget(QDockWidget):
     def update_docker_size(self):
         # Force immediate size recalculation
         self.updateGeometry()
-        self.adjustSize()
-
-        # Find and update parent docker size more aggressively
-        parent_widget = self.parent()
-        while parent_widget:
-            parent_widget.updateGeometry()
-            if hasattr(parent_widget, "layout") and parent_widget.layout():
-                parent_widget.layout().invalidate()
-                parent_widget.layout().activate()
-
-            if isinstance(parent_widget, QDockWidget):
-                # Force the docker to resize by setting size policies and hints
-                parent_widget.updateGeometry()
-                parent_widget.adjustSize()
-
-                # Get the main widget and force it to recalculate
-                main_widget = parent_widget.widget()
-                if main_widget:
-                    main_widget.updateGeometry()
-                    main_widget.adjustSize()
-                break
-            parent_widget = parent_widget.parent()
+        self.resize(self.width(), self.sizeHint().height())
 
     def disable_top_menu_shortcuts(self):
         ########################################################
@@ -405,8 +397,7 @@ class CollapsibleSection(QWidget):
         # Create header button
         self.header_button = QPushButton()
         self.header_button.setFlat(True)
-        self.header_button.setStyleSheet(
-            """
+        self.header_button.setStyleSheet("""
             QPushButton {
                 text-align: left;
                 padding: 1px;
@@ -420,8 +411,7 @@ class CollapsibleSection(QWidget):
             QPushButton:hover {
                 background-color: #818181;
             }
-        """
-        )
+        """)
         self.header_button.clicked.connect(self.toggle_collapsed)
         self.update_header_text()
 
