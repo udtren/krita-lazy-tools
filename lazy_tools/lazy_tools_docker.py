@@ -4,19 +4,11 @@ from .compat import (
     QVBoxLayout,
     QHBoxLayout,
     QPushButton,
-    QLabel,
     QDockWidget,
     QFrame,
-    QDialog,
-    QTabWidget,
-    QCheckBox,
-    QFormLayout,
-    QTextEdit,
-    QColorDialog,
     QTimer,
     QSize,
     QIcon,
-    QColor,
 )
 from lazy_tools.widgets.color_filter_widgets import ColorFilterSection
 from lazy_tools.widgets.scripts_widgets import ScriptsSection
@@ -24,14 +16,10 @@ from lazy_tools.widgets.segment_widgets import SegmentSection
 from lazy_tools.widgets.name_filter_widgets import NameFilterSection
 from lazy_tools.config.config_loader import (
     get_script_enabled,
-    load_config,
-    save_config,
-    set_script_enabled,
-    load_name_color_list,
-    save_name_color_list,
-    get_foreground_color,
+    get_section_enabled,
     get_icon_dir,
 )
+from lazy_tools.dialogs import SettingsDialog
 import os
 
 try:
@@ -88,25 +76,25 @@ class LazyToolsDockerWidget(QDockWidget):
         # Create collapsible Name Filter (Prefix) section
         ##############################
 
-        self.name_filter_section = CollapsibleSection("Name Filter (Prefix)")
-        self.name_filter_content = NameFilterSection(
-            self, default_filter="_", use_prefix_match=True
-        )
-        self.name_filter_section.set_content_widget(self.name_filter_content)
-
-        main_layout.addWidget(self.name_filter_section)
+        if get_section_enabled("name_filter_prefix_section"):
+            self.name_filter_section = CollapsibleSection("Name Filter (Prefix)")
+            self.name_filter_content = NameFilterSection(
+                self, default_filter="_", use_prefix_match=True
+            )
+            self.name_filter_section.set_content_widget(self.name_filter_content)
+            main_layout.addWidget(self.name_filter_section)
 
         ##############################
-        # Create collapsible Name Filter  section
+        # Create collapsible Name Filter section
         ##############################
 
-        self.name_filter_section2 = CollapsibleSection("Name Filter (Any)")
-        self.name_filter_content2 = NameFilterSection(
-            self, default_filter="", use_prefix_match=False
-        )
-        self.name_filter_section2.set_content_widget(self.name_filter_content2)
-
-        main_layout.addWidget(self.name_filter_section2)
+        if get_section_enabled("name_filter_section"):
+            self.name_filter_section2 = CollapsibleSection("Name Filter (Any)")
+            self.name_filter_content2 = NameFilterSection(
+                self, default_filter="", use_prefix_match=False
+            )
+            self.name_filter_section2.set_content_widget(self.name_filter_content2)
+            main_layout.addWidget(self.name_filter_section2)
 
         ##############################
         # Check if .pt files exist in models directory before adding AI Segmentation section
@@ -200,180 +188,6 @@ class LazyToolsDockerWidget(QDockWidget):
         # Resume gesture if we paused it
         if should_resume_gesture:
             resume_gesture_event_filter()
-
-
-class SettingsDialog(QDialog):
-    """Settings dialog for Lazy Tools configuration"""
-
-    def __init__(self, parent=None):
-        super().__init__(parent)
-        self.setWindowTitle("Lazy Tools Settings")
-        self.setMinimumSize(400, 300)
-        self.setup_ui()
-
-    def setup_ui(self):
-        """Setup the settings dialog UI"""
-        layout = QVBoxLayout()
-
-        # Create tab widget
-        self.tab_widget = QTabWidget()
-
-        # Create Common settings tab
-        self.common_tab = QWidget()
-        self.setup_common_tab()
-        self.tab_widget.addTab(self.common_tab, "Common")
-
-        # Create Name List tab
-        self.name_list_tab = QWidget()
-        self.setup_name_list_tab()
-        self.tab_widget.addTab(self.name_list_tab, "Name List")
-
-        layout.addWidget(self.tab_widget)
-
-        # Add Save and Cancel buttons
-        button_layout = QHBoxLayout()
-        button_layout.addStretch()
-
-        self.save_button = QPushButton("Save")
-        self.save_button.clicked.connect(self.save_settings)
-
-        self.cancel_button = QPushButton("Cancel")
-        self.cancel_button.clicked.connect(self.reject)
-
-        button_layout.addWidget(self.save_button)
-        button_layout.addWidget(self.cancel_button)
-
-        layout.addLayout(button_layout)
-        self.setLayout(layout)
-
-    def setup_common_tab(self):
-        """Setup the Common settings tab"""
-        layout = QFormLayout()
-
-        # Load current config
-        config = load_config()
-
-        # Create checkboxes for each script
-        self.checkboxes = {}
-
-        # Screen Color Picker setting
-        screen_color_picker_enabled = config.get("screen_color_picker", {}).get(
-            "enabled", True
-        )
-        self.screen_color_picker_checkbox = QCheckBox("Enable Screen Color Picker")
-        self.screen_color_picker_checkbox.setChecked(screen_color_picker_enabled)
-        self.checkboxes["screen_color_picker"] = self.screen_color_picker_checkbox
-        layout.addRow(self.screen_color_picker_checkbox)
-
-        # Disable Top Menu Shortcuts setting
-        disable_top_menu_enabled = config.get("disable_top_menu_shortcuts", {}).get(
-            "enabled", True
-        )
-        self.disable_top_menu_checkbox = QCheckBox("Disable Top Menu Shortcuts")
-        self.disable_top_menu_checkbox.setChecked(disable_top_menu_enabled)
-        self.checkboxes["disable_top_menu_shortcuts"] = self.disable_top_menu_checkbox
-        layout.addRow(self.disable_top_menu_checkbox)
-
-        # Foreground Color settings (1-9)
-        self.colors = {}
-        self.color_buttons = {}
-        for i in range(1, 10):
-            color_data = get_foreground_color(i)
-            self.colors[i] = QColor(
-                color_data.get("r", 136),
-                color_data.get("g", 136),
-                color_data.get("b", 136),
-                color_data.get("a", 255),
-            )
-            button = QPushButton()
-            button.setFixedSize(60, 24)
-            button.clicked.connect(lambda _, num=i: self.pick_color(num))
-            self.color_buttons[i] = button
-            self.update_color_button(i)
-            layout.addRow(f"Foreground Color {i}:", button)
-
-        # Add note label
-        note_label = QLabel("Note: Changes will take effect after restarting Krita.")
-        note_label.setStyleSheet("color: #888; font-style: italic; margin-top: 10px;")
-        layout.addRow(note_label)
-
-        self.common_tab.setLayout(layout)
-
-    def update_color_button(self, color_num):
-        """Update the color button background to show the selected color"""
-        self.color_buttons[color_num].setStyleSheet(
-            f"background-color: {self.colors[color_num].name()}; border: 1px solid #888;"
-        )
-
-    def pick_color(self, color_num):
-        """Open color picker dialog for the specified color"""
-        color = QColorDialog.getColor(
-            self.colors[color_num], self, f"Select Foreground Color {color_num}"
-        )
-        if color.isValid():
-            self.colors[color_num] = color
-            self.update_color_button(color_num)
-
-    def setup_name_list_tab(self):
-        """Setup the Name List tab"""
-        layout = QVBoxLayout()
-
-        # Add description label
-        description_label = QLabel(
-            "Configure layer names and optional colors.\n"
-            "Format: layer_name or layer_name, Color\n"
-            "\n"
-            "Supported colors: Blue, Green, Yellow, Orange, Brown, Red, Purple, Grey\n"
-            "\n"
-            "Example:\n"
-            "  layer_name1\n"
-            "  layer_name2\n"
-            "  layer_name3, Blue"
-        )
-        description_label.setStyleSheet(
-            "color: #888; font-size: 11px; margin-bottom: 5px;"
-        )
-        layout.addWidget(description_label)
-
-        # Create text edit for name color list
-        self.name_color_list_text = QTextEdit()
-        self.name_color_list_text.setPlaceholderText(
-            "Enter layer names here, one per line...\n"
-            "Optionally add color: layer_name, Color"
-        )
-
-        # Load current content
-        current_content = load_name_color_list()
-        self.name_color_list_text.setPlainText(current_content)
-
-        layout.addWidget(self.name_color_list_text)
-
-        self.name_list_tab.setLayout(layout)
-
-    def save_settings(self):
-        """Save settings to config file"""
-        # Update config for each script
-        for script_name, checkbox in self.checkboxes.items():
-            set_script_enabled(script_name, checkbox.isChecked())
-
-        # Save foreground colors
-        config = load_config()
-        if "foreground_color" not in config:
-            config["foreground_color"] = {}
-        for i, color in self.colors.items():
-            config["foreground_color"][f"color{i}"] = {
-                "r": color.red(),
-                "g": color.green(),
-                "b": color.blue(),
-                "a": color.alpha(),
-            }
-        save_config(config)
-
-        # Save name color list
-        name_color_content = self.name_color_list_text.toPlainText()
-        save_name_color_list(name_color_content)
-
-        self.accept()
 
 
 class CollapsibleSection(QWidget):

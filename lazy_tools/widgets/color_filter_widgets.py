@@ -1,10 +1,22 @@
 from typing import Dict
 from krita import Krita, Node  # type: ignore
 from ..compat import (
-    QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel,
-    Qt, QTimer, QPixmap, QColor, QCursor,
+    QWidget,
+    QVBoxLayout,
+    QHBoxLayout,
+    QPushButton,
+    QLabel,
+    Qt,
+    QTimer,
+    QPixmap,
+    QColor,
+    QCursor,
+    QIcon,
+    QSize,
 )
 from lazy_tools.utils.color_scheme import ColorScheme
+from lazy_tools.config.config_loader import get_icon_dir
+import os
 
 # from lazy_tools.utils.logs import write_log
 
@@ -97,18 +109,19 @@ class ColorFilterRow(QWidget):
         layout.setSpacing(2)
 
         # Toggle visibility button
-        self.toggle_button = QPushButton("👁")
+        self.toggle_button = QPushButton()
+        eye_icon_path = os.path.join(get_icon_dir(), "eye.png")
+        self.toggle_button.setIcon(QIcon(eye_icon_path))
+        self.toggle_button.setIconSize(QSize(16, 16))
         self.toggle_button.setFixedSize(30, 25)
-        self.toggle_button.setStyleSheet(
-            """
+        self.toggle_button.setStyleSheet("""
             QPushButton {
-                background-color: #191919;
+                background-color: #5e5e5e;
             }
             QPushButton:hover {
-                background-color: #393939;
+                background-color: #8c8c8c;
             }
-        """
-        )
+        """)
         self.toggle_button.clicked.connect(self.toggle_visibility)
         layout.addWidget(self.toggle_button)
 
@@ -260,8 +273,7 @@ class OpacityPopup(QWidget):
         self.setLayout(layout)
 
         # Style the popup
-        self.setStyleSheet(
-            """
+        self.setStyleSheet("""
             QWidget {
                 background-color: #2b2b2b;
                 border: 2px solid #555555;
@@ -281,8 +293,7 @@ class OpacityPopup(QWidget):
             QPushButton:pressed {
                 background-color: #5c5c5c;
             }
-        """
-        )
+        """)
 
         # Position at cursor
         self.move(cursor_pos)
