@@ -1,4 +1,6 @@
 import uuid
+import os
+import sys
 from krita import Krita, Extension
 from ..compat import (
     QDialog, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit,
@@ -16,16 +18,8 @@ try:
 except ImportError:
     GESTURE_AVAILABLE = False
 
-BLENDING_MODES = [
-    "normal",
-    "multiply",
-    "screen",
-    "color_dodge",
-    "overlay",
-    "soft_light_svg",
-    "darken",
-    "lighten",
-]
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
+from config.config_loader import get_blending_modes
 
 
 class DuplicateLayerDialog(QDialog):
@@ -55,7 +49,7 @@ class DuplicateLayerDialog(QDialog):
         blending_mode_label = QLabel("Blending Mode:")
         self.blending_mode_combo = QComboBox()
         self.blending_mode_combo.setEditable(True)
-        self.blending_mode_combo.addItems(BLENDING_MODES)
+        self.blending_mode_combo.addItems(get_blending_modes())
         self.blending_mode_combo.setCurrentText(self.blending_mode)
         blending_mode_layout.addWidget(blending_mode_label)
         blending_mode_layout.addWidget(self.blending_mode_combo)

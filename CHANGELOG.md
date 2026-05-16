@@ -3,6 +3,22 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## 2026-05-16
+### Added
+- Blending Modes now editable via Settings dialog (new "Blending Modes" tab)
+  - New `get_blending_modes()` / `save_blending_modes()` in `config_loader.py`
+  - Default list covers: normal, multiply, screen, overlay, soft_light_svg, hard_light, darken, lighten, dodge, color_dodge, add, greater
+  - Add New Layer and Duplicate dialogs both read from config at runtime
+- Two new section-visibility checkboxes in Settings → Common tab
+  - "Enable Name Filter (Prefix) section" — controls the prefix-match Name Filter panel
+  - "Enable Name Filter section" — controls the any-match Name Filter panel
+  - Sections are hidden from the docker on restart when disabled
+- `SettingsDialog` moved to `lazy_tools/dialogs/settings_dialog.py`
+  - New `lazy_tools/dialogs/` package; `lazy_tools_docker.py` imports from there
+
+### Changed
+- Color Filter toggle button now uses `eye.png` icon (16×16) instead of the 👁 emoji
+
 ## 2026-03-30
 ### Changed
 - PyQt5 / PyQt6 dual compatibility (`compat.py`)

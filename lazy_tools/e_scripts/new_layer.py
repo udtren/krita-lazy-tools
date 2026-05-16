@@ -3,8 +3,13 @@ import os
 import sys
 from krita import Krita, Extension, InfoObject, Selection
 from ..compat import (
-    QDialog, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit,
-    QComboBox, QPushButton, QCheckBox,
+    QDialog,
+    QVBoxLayout,
+    QHBoxLayout,
+    QLabel,
+    QComboBox,
+    QPushButton,
+    QCheckBox,
 )
 
 try:
@@ -20,20 +25,7 @@ except ImportError:
 
 # Add parent directory to path to import from lazy_tools
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
-from config.config_loader import load_name_color_list
-
-BLENDING_MODES = [
-    "normal",
-    "multiply",
-    "screen",
-    "dodge",
-    "overlay",
-    "soft_light_svg",
-    "hard_light",
-    "darken",
-    "lighten",
-    "greater",
-]
+from config.config_loader import load_name_color_list, get_blending_modes
 
 
 class NewLayerDialog(QDialog):
@@ -100,7 +92,7 @@ class NewLayerDialog(QDialog):
         blending_mode_label = QLabel("Blending Mode:")
         self.blending_mode_combo = QComboBox()
         self.blending_mode_combo.setEditable(True)
-        self.blending_mode_combo.addItems(BLENDING_MODES)
+        self.blending_mode_combo.addItems(get_blending_modes())
         self.blending_mode_combo.setCurrentText("normal")
         blending_mode_layout.addWidget(blending_mode_label)
         blending_mode_layout.addWidget(self.blending_mode_combo)

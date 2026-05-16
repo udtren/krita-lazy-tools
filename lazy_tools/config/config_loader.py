@@ -38,6 +38,22 @@ def get_icon_dir():
     return os.path.join(config_dir, "icon")
 
 
+DEFAULT_BLENDING_MODES = [
+    "normal",
+    "multiply",
+    "screen",
+    "overlay",
+    "soft_light_svg",
+    "hard_light",
+    "darken",
+    "lighten",
+    "dodge",
+    "color_dodge",
+    "add",
+    "greater",
+]
+
+
 def get_default_config():
     """Get the default configuration settings
 
@@ -47,6 +63,9 @@ def get_default_config():
     return {
         "screen_color_picker": {"enabled": True},
         "disable_top_menu_shortcuts": {"enabled": True},
+        "name_filter_prefix_section": {"enabled": True},
+        "name_filter_section": {"enabled": True},
+        "blending_modes": DEFAULT_BLENDING_MODES,
         "foreground_color": {
             "color1": {"r": 136, "g": 136, "b": 136, "a": 255},
             "color2": {"r": 136, "g": 136, "b": 136, "a": 255},
@@ -239,6 +258,68 @@ def get_foreground_color(color_num):
         return default_color
 
     return config["foreground_color"][color_key]
+
+
+def get_section_enabled(section_name, default=True):
+    """Get the enabled status of a UI section
+
+    Args:
+        section_name (str): Config key for the section
+        default (bool): Default value if not found (True = visible by default)
+
+    Returns:
+        bool: True if the section should be shown
+    """
+    config = load_config()
+
+    if section_name not in config:
+        return default
+
+    return config[section_name].get("enabled", default)
+
+
+def set_section_enabled(section_name, enabled):
+    """Set the enabled status of a UI section
+
+    Args:
+        section_name (str): Config key for the section
+        enabled (bool): True to show, False to hide
+
+    Returns:
+        bool: True if save was successful
+    """
+    config = load_config()
+
+    if section_name not in config:
+        config[section_name] = {}
+
+    config[section_name]["enabled"] = enabled
+
+    return save_config(config)
+
+
+def get_blending_modes():
+    """Get the list of blending modes from config
+
+    Returns:
+        list: List of blending mode strings
+    """
+    config = load_config()
+    return config.get("blending_modes", DEFAULT_BLENDING_MODES)
+
+
+def save_blending_modes(modes):
+    """Save the blending modes list to config
+
+    Args:
+        modes (list): List of blending mode strings
+
+    Returns:
+        bool: True if save was successful
+    """
+    config = load_config()
+    config["blending_modes"] = modes
+    return save_config(config)
 
 
 # Convenience wrappers for backwards compatibility
