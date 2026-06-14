@@ -3,7 +3,7 @@ import os
 from krita import Krita, InfoObject  # type: ignore
 
 from ..compat import QWidget, QVBoxLayout, QPushButton, QLabel, QFileDialog
-from ..config.config_loader import get_export_settings
+from ..config.config_loader import get_export_settings, get_export_button_font_size
 
 
 def _export_doc(doc, fmt: str, output_dir: str = None) -> bool:
@@ -52,7 +52,7 @@ class ImageExportWidget(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
 
-        self.setStyleSheet("QPushButton { font-size: 11px; }")
+        self.setStyleSheet(f"QPushButton {{ font-size: {get_export_button_font_size()}px; font-weight: bold; }}")
 
         layout = QVBoxLayout()
         layout.setContentsMargins(4, 4, 4, 4)

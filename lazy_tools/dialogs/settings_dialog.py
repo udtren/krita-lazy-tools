@@ -26,6 +26,8 @@ from ..config.config_loader import (
     save_blending_modes,
     get_export_settings,
     save_export_settings,
+    get_export_button_font_size,
+    save_export_button_font_size,
 )
 
 
@@ -197,6 +199,17 @@ class SettingsDialog(QDialog):
         png = get_export_settings("png")
         jpg = get_export_settings("jpg")
 
+        # UI section
+        ui_label = QLabel("UI")
+        ui_label.setStyleSheet("font-weight: bold; margin-top: 6px;")
+        layout.addRow(ui_label)
+
+        self.export_button_font_size = QSpinBox()
+        self.export_button_font_size.setRange(8, 24)
+        self.export_button_font_size.setSuffix(" px")
+        self.export_button_font_size.setValue(get_export_button_font_size())
+        layout.addRow("Button font size:", self.export_button_font_size)
+
         # PNG section
         png_label = QLabel("PNG")
         png_label.setStyleSheet("font-weight: bold; margin-top: 6px;")
@@ -282,5 +295,7 @@ class SettingsDialog(QDialog):
         save_export_settings("jpg", {
             "quality": self.jpg_quality.value(),
         })
+
+        save_export_button_font_size(self.export_button_font_size.value())
 
         self.accept()

@@ -17,6 +17,7 @@ If you find this tool helpful, you can support its development:
   - [Name Filtering](#name-filtering)
   - [AI Segmentation](#ai-segmentation)
   - [Script Execution](#script-execution)
+  - [Fast Image Export](#fast-image-export)
 - [Custom Actions](#custom-actions)
   - [Add New Layer](#add-new-layer)
   - [Rename Layer](#rename-layer)
@@ -65,6 +66,47 @@ If you find this tool helpful, you can support its development:
 - Execute custom Python scripts
 - Auto-discovery of `.py` files in the `lazy_tools/scripts/` folder
 - "Reload Scripts" option for dynamic script development
+
+### Fast Image Export
+
+One-click export of the active document or all open documents to PNG or JPEG, without any dialog interruption.
+
+Available in the **Image Export** collapsible section of the Lazy Tools docker.
+
+#### Export to same folder as `.kra`
+
+Exports next to the source file using the same base name (e.g. `painting.kra` → `painting.png`).
+
+| Button | Action |
+|--------|--------|
+| PNG — active doc | Export active document as PNG |
+| PNG — all docs | Export every open document as PNG |
+| JPEG — active doc | Export active document as JPEG |
+| JPEG — all docs | Export every open document as JPEG |
+
+#### Export to chosen folder
+
+Same four exports, but opens a folder picker first. Each doc keeps its own base name inside the chosen folder.
+
+| Button | Action |
+|--------|--------|
+| PNG — active doc… | Pick folder, then export active doc as PNG |
+| PNG — all docs… | Pick folder, then export all docs as PNG |
+| JPEG — active doc… | Pick folder, then export active doc as JPEG |
+| JPEG — all docs… | Pick folder, then export all docs as JPEG |
+
+#### Settings
+
+Open the gear icon → **Image Export** tab to configure:
+
+- **Button font size** (8–24 px)
+- **PNG Compression** (0 = fast/large … 9 = slow/small)
+- **PNG Save alpha channel** — include or strip transparency
+- **JPEG Quality** (0 = smallest … 100 = best)
+
+Settings are stored in `common.json` and applied on the next docker load.
+
+> **Note:** Documents that have not yet been saved to disk are skipped with a console message.
 
 ## Custom Actions
 A collection of scripts to speed up workflow.

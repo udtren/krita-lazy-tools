@@ -79,7 +79,7 @@ All action names are declared in [e_scripts/actions.action](lazy_tools/e_scripts
 | [widgets/name_filter_widgets.py](lazy_tools/widgets/name_filter_widgets.py) | Prefix/any-match name filter with opacity control |
 | [widgets/scripts_widgets.py](lazy_tools/widgets/scripts_widgets.py) | Auto-discovers and runs `.py` files from `scripts/` |
 | [widgets/segment_widgets.py](lazy_tools/widgets/segment_widgets.py) | Florence-2 + SAM2 UI (shown only when models present) |
-| [widgets/image_export_widgets.py](lazy_tools/widgets/image_export_widgets.py) | One-click PNG/JPEG export buttons (active doc or all docs) |
+| [widgets/image_export_widgets.py](lazy_tools/widgets/image_export_widgets.py) | One-click PNG/JPEG export — same folder or folder picker, active doc or all docs |
 
 ### Configuration file layout
 
@@ -104,6 +104,10 @@ krita_data/ (e.g. AppData/Roaming/krita/)
 | `name_filter_section.enabled` | bool | Show any-match section in docker |
 | `blending_modes` | list[str] | Available modes in layer dialogs |
 | `foreground_color.color1`–`color9` | `{r,g,b,a}` | Foreground colour slots |
+| `export_png.compression` | int 0–9 | PNG compression level (default 3) |
+| `export_png.alpha` | bool | PNG save alpha channel (default true) |
+| `export_jpg.quality` | int 0–100 | JPEG quality (default 100) |
+| `image_export_ui.button_font_size` | int | Font size (px) for Image Export docker buttons (default 11) |
 
 ## Import conventions
 

@@ -341,6 +341,19 @@ def save_export_settings(fmt: str, settings: dict) -> bool:
     return save_config(config)
 
 
+def get_export_button_font_size() -> int:
+    """Return the font size (px) used for buttons in the Image Export widget."""
+    config = load_config()
+    return int(config.get("image_export_ui", {}).get("button_font_size", 11))
+
+
+def save_export_button_font_size(size: int) -> bool:
+    """Persist the Image Export button font size to config."""
+    config = load_config()
+    config.setdefault("image_export_ui", {})["button_font_size"] = size
+    return save_config(config)
+
+
 # Convenience wrappers for backwards compatibility
 def get_foreground_color1():
     return get_foreground_color(1)
