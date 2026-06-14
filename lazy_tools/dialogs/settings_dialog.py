@@ -11,6 +11,7 @@ from ..compat import (
     QTextEdit,
     QColorDialog,
     QColor,
+    QSpinBox,
 )
 from ..config.config_loader import (
     load_config,
@@ -23,6 +24,8 @@ from ..config.config_loader import (
     set_section_enabled,
     get_blending_modes,
     save_blending_modes,
+    get_export_settings,
+    save_export_settings,
 )
 
 
@@ -52,6 +55,10 @@ class SettingsDialog(QDialog):
         self.blending_modes_tab = QWidget()
         self.setup_blending_modes_tab()
         self.tab_widget.addTab(self.blending_modes_tab, "Blending Modes")
+
+        self.image_export_tab = QWidget()
+        self.setup_image_export_tab()
+        self.tab_widget.addTab(self.image_export_tab, "Image Export")
 
         layout.addWidget(self.tab_widget)
 
@@ -183,6 +190,41 @@ class SettingsDialog(QDialog):
 
         self.name_list_tab.setLayout(layout)
 
+    def setup_image_export_tab(self):
+        """Setup the Image Export settings tab."""
+        layout = QFormLayout()
+
+        png = get_export_settings("png")
+        jpg = get_export_settings("jpg")
+
+        # PNG section
+        png_label = QLabel("PNG")
+        png_label.setStyleSheet("font-weight: bold; margin-top: 6px;")
+        layout.addRow(png_label)
+
+        self.png_compression = QSpinBox()
+        self.png_compression.setRange(0, 9)
+        self.png_compression.setValue(int(png.get("compression", 6)))
+        self.png_compression.setToolTip("0 = no compression (fast), 9 = max compression (slow)")
+        layout.addRow("Compression (0–9):", self.png_compression)
+
+        self.png_alpha = QCheckBox("Save alpha channel")
+        self.png_alpha.setChecked(bool(png.get("alpha", True)))
+        layout.addRow(self.png_alpha)
+
+        # JPEG section
+        jpg_label = QLabel("JPEG")
+        jpg_label.setStyleSheet("font-weight: bold; margin-top: 6px;")
+        layout.addRow(jpg_label)
+
+        self.jpg_quality = QSpinBox()
+        self.jpg_quality.setRange(0, 100)
+        self.jpg_quality.setValue(int(jpg.get("quality", 90)))
+        self.jpg_quality.setToolTip("0 = smallest file, 100 = best quality")
+        layout.addRow("Quality (0–100):", self.jpg_quality)
+
+        self.image_export_tab.setLayout(layout)
+
     def setup_blending_modes_tab(self):
         """Setup the Blending Modes tab"""
         layout = QVBoxLayout()
@@ -232,5 +274,13 @@ class SettingsDialog(QDialog):
         modes_text = self.blending_modes_text.toPlainText()
         modes = [m.strip() for m in modes_text.splitlines() if m.strip()]
         save_blending_modes(modes)
+
+        save_export_settings("png", {
+            "compression": self.png_compression.value(),
+            "alpha": self.png_alpha.isChecked(),
+        })
+        save_export_settings("jpg", {
+            "quality": self.jpg_quality.value(),
+        })
 
         self.accept()

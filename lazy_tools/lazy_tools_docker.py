@@ -14,6 +14,7 @@ from lazy_tools.widgets.color_filter_widgets import ColorFilterSection
 from lazy_tools.widgets.scripts_widgets import ScriptsSection
 from lazy_tools.widgets.segment_widgets import SegmentSection
 from lazy_tools.widgets.name_filter_widgets import NameFilterSection
+from lazy_tools.widgets.image_export_widgets import ImageExportWidget
 from lazy_tools.config.config_loader import (
     get_script_enabled,
     get_section_enabled,
@@ -113,6 +114,15 @@ class LazyToolsDockerWidget(QDockWidget):
         self.scripts_section.set_content_widget(self.scripts_content)
 
         main_layout.addWidget(self.scripts_section)
+
+        ##############################
+        # Create collapsible Image Export section
+        ##############################
+        self.image_export_section = CollapsibleSection("Image Export", collapsed=True)
+        self.image_export_content = ImageExportWidget(self)
+        self.image_export_section.set_content_widget(self.image_export_content)
+
+        main_layout.addWidget(self.image_export_section)
 
         ##############################
         # Add small stretch at the end to push content up slightly

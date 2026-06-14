@@ -17,7 +17,7 @@ try:
         QInputDialog, QFormLayout, QTextEdit, QGroupBox,
         QTabWidget, QAction, QAbstractItemView, QMenu, QListWidget,
         QListWidgetItem, QSplitter, QStackedWidget, QProgressBar,
-        QRadioButton, QButtonGroup,
+        QRadioButton, QButtonGroup, QFileDialog,
     )
     from PyQt5.QtGui import (  # noqa: F401
         QIcon, QPixmap, QPainter, QBrush, QColor, QCursor, QDrag,
@@ -40,6 +40,7 @@ except ImportError:
         QInputDialog, QFormLayout, QTextEdit, QGroupBox,
         QTabWidget, QAbstractItemView, QMenu, QListWidget,
         QListWidgetItem, QSplitter, QStackedWidget, QProgressBar,
+        QFileDialog,
     )
     from PyQt6.QtGui import (  # noqa: F401
         QIcon, QPixmap, QPainter, QBrush, QColor, QCursor, QDrag,
