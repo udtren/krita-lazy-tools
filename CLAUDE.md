@@ -79,7 +79,7 @@ All action names are declared in [e_scripts/actions.action](lazy_tools/e_scripts
 | [widgets/name_filter_widgets.py](lazy_tools/widgets/name_filter_widgets.py) | Prefix/any-match name filter with opacity control |
 | [widgets/scripts_widgets.py](lazy_tools/widgets/scripts_widgets.py) | Auto-discovers and runs `.py` files from `scripts/` |
 | [widgets/segment_widgets.py](lazy_tools/widgets/segment_widgets.py) | Florence-2 + SAM2 UI (shown only when models present) |
-| [widgets/image_export_widgets.py](lazy_tools/widgets/image_export_widgets.py) | One-click PNG/JPEG export — same folder or folder picker, active doc or all docs |
+| [widgets/image_export_widgets.py](lazy_tools/widgets/image_export_widgets.py) | One-click PNG/JPEG export — same folder, default folder, or folder picker; active doc or all docs |
 
 ### Configuration file layout
 
@@ -108,6 +108,7 @@ krita_data/ (e.g. AppData/Roaming/krita/)
 | `export_png.alpha` | bool | PNG save alpha channel (default true) |
 | `export_jpg.quality` | int 0–100 | JPEG quality (default 100) |
 | `image_export_ui.button_font_size` | int | Font size (px) for Image Export docker buttons (default 11) |
+| `image_export_ui.default_folder` | str | Absolute path used by "Export to default folder" buttons; empty = not set |
 
 ## Import conventions
 

@@ -341,6 +341,19 @@ def save_export_settings(fmt: str, settings: dict) -> bool:
     return save_config(config)
 
 
+def get_export_default_folder() -> str:
+    """Return the saved default export folder, or '' if not set."""
+    config = load_config()
+    return config.get("image_export_ui", {}).get("default_folder", "")
+
+
+def save_export_default_folder(path: str) -> bool:
+    """Persist the default export folder to config."""
+    config = load_config()
+    config.setdefault("image_export_ui", {})["default_folder"] = path
+    return save_config(config)
+
+
 def get_export_button_font_size() -> int:
     """Return the font size (px) used for buttons in the Image Export widget."""
     config = load_config()

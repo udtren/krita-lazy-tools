@@ -6,19 +6,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ## 2026-06-14
 ### Added
 - **Fast Image Export** docker section (`widgets/image_export_widgets.py`)
-  - 8 one-click export buttons split into two groups:
+  - 12 one-click export buttons split into three groups:
     - *Same folder as .kra*: PNG active, PNG all, JPEG active, JPEG all
+    - *Default folder*: same four variants, output goes to the folder configured in Settings
     - *Choose folder*: same four variants, opens a folder-picker dialog first
   - Integrated into `lazy_tools_docker.py` as a new collapsible "Image Export" section (collapsed by default, placed after "Scripts")
 - **Image Export settings tab** in `SettingsDialog`
   - Button font size (8–24 px, default 11)
+  - Default export folder path (`QLineEdit` + Browse button)
   - PNG compression level (0–9, default 3)
   - PNG save alpha channel toggle (default on)
   - JPEG quality (0–100, default 100)
 - `config_loader.py` additions:
   - `get_export_settings(fmt)` / `save_export_settings(fmt, settings)` — read/write `export_png` and `export_jpg` blocks in `common.json`
   - `get_export_button_font_size()` / `save_export_button_font_size(size)` — read/write `image_export_ui.button_font_size`
-- `compat.py`: added `QFileDialog` and `QSpinBox` to both PyQt5 and PyQt6 import blocks
+  - `get_export_default_folder()` / `save_export_default_folder(path)` — read/write `image_export_ui.default_folder`
+- `compat.py`: added `QFileDialog`, `QLineEdit`, and `QSpinBox` to both PyQt5 and PyQt6 import blocks
 
 ## 2026-05-16
 ### Added
