@@ -9,9 +9,9 @@ def _get_krita_data_dir():
     """
     # __file__ => krita/pykrita/lazy_tools/config/config_loader.py
     config_dir = os.path.dirname(os.path.abspath(__file__))
-    plugin_dir = os.path.dirname(config_dir)   # .../lazy_tools/
+    plugin_dir = os.path.dirname(config_dir)  # .../lazy_tools/
     pykrita_dir = os.path.dirname(plugin_dir)  # .../pykrita/
-    return os.path.dirname(pykrita_dir)        # .../krita/
+    return os.path.dirname(pykrita_dir)  # .../krita/
 
 
 def _get_user_data_dir():
@@ -319,6 +319,38 @@ def save_blending_modes(modes):
     """
     config = load_config()
     config["blending_modes"] = modes
+    return save_config(config)
+
+
+_EXPORT_DEFAULTS = {
+    "png": {"compression": 3, "alpha": True},
+    "jpg": {"quality": 100},
+}
+
+
+def get_export_settings(fmt: str) -> dict:
+    """Return saved export settings for *fmt* ('png' or 'jpg'), falling back to defaults."""
+    config = load_config()
+    return dict(_EXPORT_DEFAULTS.get(fmt, {}), **config.get(f"export_{fmt}", {}))
+
+
+def save_export_settings(fmt: str, settings: dict) -> bool:
+    """Persist export settings for *fmt* to config."""
+    config = load_config()
+    config[f"export_{fmt}"] = settings
+    return save_config(config)
+
+
+def get_export_button_font_size() -> int:
+    """Return the font size (px) used for buttons in the Image Export widget."""
+    config = load_config()
+    return int(config.get("image_export_ui", {}).get("button_font_size", 11))
+
+
+def save_export_button_font_size(size: int) -> bool:
+    """Persist the Image Export button font size to config."""
+    config = load_config()
+    config.setdefault("image_export_ui", {})["button_font_size"] = size
     return save_config(config)
 
 
