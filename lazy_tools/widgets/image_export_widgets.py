@@ -3,7 +3,7 @@ import os
 from krita import Krita, InfoObject  # type: ignore
 
 from ..compat import QWidget, QVBoxLayout, QPushButton, QLabel, QFileDialog
-from ..config.config_loader import get_export_settings, get_export_button_font_size
+from ..config.config_loader import get_export_settings, get_export_button_font_size, get_export_default_folder
 
 
 def _export_doc(doc, fmt: str, output_dir: str = None) -> bool:
@@ -82,6 +82,29 @@ class ImageExportWidget(QWidget):
         self._btn_jpg_active.clicked.connect(self._export_jpg_active)
         self._btn_jpg_all.clicked.connect(self._export_jpg_all)
 
+        # --- default-folder exports ---
+        label_default = QLabel("Export to default folder:")
+        label_default.setStyleSheet("color: #aaa; font-size: 11px; margin-top: 4px;")
+        layout.addWidget(label_default)
+
+        self._btn_png_active_default = QPushButton("PNG  — active doc")
+        self._btn_png_all_default    = QPushButton("PNG  — all docs")
+        self._btn_jpg_active_default = QPushButton("JPEG — active doc")
+        self._btn_jpg_all_default    = QPushButton("JPEG — all docs")
+
+        for btn in (
+            self._btn_png_active_default,
+            self._btn_png_all_default,
+            self._btn_jpg_active_default,
+            self._btn_jpg_all_default,
+        ):
+            layout.addWidget(btn)
+
+        self._btn_png_active_default.clicked.connect(self._export_png_active_default)
+        self._btn_png_all_default.clicked.connect(self._export_png_all_default)
+        self._btn_jpg_active_default.clicked.connect(self._export_jpg_active_default)
+        self._btn_jpg_all_default.clicked.connect(self._export_jpg_all_default)
+
         # --- choose-folder exports ---
         label_pick = QLabel("Export to chosen folder:")
         label_pick.setStyleSheet("color: #aaa; font-size: 11px; margin-top: 4px;")
@@ -119,6 +142,37 @@ class ImageExportWidget(QWidget):
     def _export_jpg_all(self):
         for doc in Krita.instance().documents():
             _export_doc(doc, "jpg")
+
+    # --- default-folder handlers ---
+    def _export_png_active_default(self):
+        folder = get_export_default_folder()
+        if not folder:
+            print("[image_export] No default folder set — configure in Settings > Image Export.")
+            return
+        _export_doc(Krita.instance().activeDocument(), "png", folder)
+
+    def _export_png_all_default(self):
+        folder = get_export_default_folder()
+        if not folder:
+            print("[image_export] No default folder set — configure in Settings > Image Export.")
+            return
+        for doc in Krita.instance().documents():
+            _export_doc(doc, "png", folder)
+
+    def _export_jpg_active_default(self):
+        folder = get_export_default_folder()
+        if not folder:
+            print("[image_export] No default folder set — configure in Settings > Image Export.")
+            return
+        _export_doc(Krita.instance().activeDocument(), "jpg", folder)
+
+    def _export_jpg_all_default(self):
+        folder = get_export_default_folder()
+        if not folder:
+            print("[image_export] No default folder set — configure in Settings > Image Export.")
+            return
+        for doc in Krita.instance().documents():
+            _export_doc(doc, "jpg", folder)
 
     # --- choose-folder handlers ---
     def _export_png_active_pick(self):

@@ -12,6 +12,8 @@ from ..compat import (
     QColorDialog,
     QColor,
     QSpinBox,
+    QLineEdit,
+    QFileDialog,
 )
 from ..config.config_loader import (
     load_config,
@@ -28,6 +30,8 @@ from ..config.config_loader import (
     save_export_settings,
     get_export_button_font_size,
     save_export_button_font_size,
+    get_export_default_folder,
+    save_export_default_folder,
 )
 
 
@@ -210,6 +214,17 @@ class SettingsDialog(QDialog):
         self.export_button_font_size.setValue(get_export_button_font_size())
         layout.addRow("Button font size:", self.export_button_font_size)
 
+        folder_row = QHBoxLayout()
+        self.export_default_folder = QLineEdit()
+        self.export_default_folder.setPlaceholderText("(not set)")
+        self.export_default_folder.setText(get_export_default_folder())
+        self._browse_btn = QPushButton("Browse…")
+        self._browse_btn.setFixedWidth(70)
+        self._browse_btn.clicked.connect(self._pick_default_folder)
+        folder_row.addWidget(self.export_default_folder)
+        folder_row.addWidget(self._browse_btn)
+        layout.addRow("Default export folder:", folder_row)
+
         # PNG section
         png_label = QLabel("PNG")
         png_label.setStyleSheet("font-weight: bold; margin-top: 6px;")
@@ -237,6 +252,19 @@ class SettingsDialog(QDialog):
         layout.addRow("Quality (0–100):", self.jpg_quality)
 
         self.image_export_tab.setLayout(layout)
+
+    def _pick_default_folder(self):
+        dialog = QFileDialog()
+        dialog.setWindowTitle("Select default export folder")
+        dialog.setFileMode(QFileDialog.Directory)
+        dialog.setOption(QFileDialog.ShowDirsOnly, True)
+        current = self.export_default_folder.text()
+        if current:
+            dialog.setDirectory(current)
+        if dialog.exec_() == QFileDialog.Accepted:
+            folders = dialog.selectedFiles()
+            if folders:
+                self.export_default_folder.setText(folders[0])
 
     def setup_blending_modes_tab(self):
         """Setup the Blending Modes tab"""
@@ -297,5 +325,7 @@ class SettingsDialog(QDialog):
         })
 
         save_export_button_font_size(self.export_button_font_size.value())
+
+        save_export_default_folder(self.export_default_folder.text().strip())
 
         self.accept()

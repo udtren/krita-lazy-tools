@@ -84,6 +84,17 @@ Exports next to the source file using the same base name (e.g. `painting.kra` �
 | JPEG — active doc | Export active document as JPEG |
 | JPEG — all docs | Export every open document as JPEG |
 
+#### Export to default folder
+
+Same four exports, but output goes to the folder configured in Settings → Image Export → Default export folder. Prints a console message if no default folder is set.
+
+| Button | Action |
+|--------|--------|
+| PNG — active doc | Export active doc as PNG to the default folder |
+| PNG — all docs | Export all docs as PNG to the default folder |
+| JPEG — active doc | Export active doc as JPEG to the default folder |
+| JPEG — all docs | Export all docs as JPEG to the default folder |
+
 #### Export to chosen folder
 
 Same four exports, but opens a folder picker first. Each doc keeps its own base name inside the chosen folder.
@@ -100,6 +111,7 @@ Same four exports, but opens a folder picker first. Each doc keeps its own base 
 Open the gear icon → **Image Export** tab to configure:
 
 - **Button font size** (8–24 px)
+- **Default export folder** — path used by the "Export to default folder" buttons; leave empty to disable those buttons
 - **PNG Compression** (0 = fast/large … 9 = slow/small)
 - **PNG Save alpha channel** — include or strip transparency
 - **JPEG Quality** (0 = smallest … 100 = best)
