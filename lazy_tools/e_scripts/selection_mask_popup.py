@@ -1,8 +1,21 @@
 from krita import *
+from .selection_mask import create_selection_mask_alt
 from ..compat import (
-    QDialog, QGridLayout, QLabel, QPushButton, QScrollArea, QWidget,
-    QVBoxLayout, Qt, QSize, QPixmap, QIcon,
+    QDialog,
+    QGridLayout,
+    QLabel,
+    QPushButton,
+    QScrollArea,
+    QWidget,
+    QVBoxLayout,
+    QHBoxLayout,
+    Qt,
+    QSize,
+    QPixmap,
+    QIcon,
 )
+
+_popup_instance = None
 
 
 class SelectionMaskThumbnailButton(QPushButton):
@@ -50,6 +63,9 @@ class SelectionMaskPopup(QDialog):
         self.doc = self.app.activeDocument()
 
         self.setup_ui()
+        font = self.font()
+        font.setBold(True)
+        self.setFont(font)
         self.load_selection_masks()
         self.adjust_size()
 
@@ -57,6 +73,17 @@ class SelectionMaskPopup(QDialog):
         """Setup the user interface"""
         main_layout = QVBoxLayout(self)
         main_layout.setContentsMargins(10, 10, 10, 10)
+
+        # Buttons row
+        btn_row = QHBoxLayout()
+        self.create_mask_btn = QPushButton("Create Mask")
+        self.create_mask_btn.clicked.connect(self._create_mask)
+        self.refresh_btn = QPushButton("Refresh")
+        self.refresh_btn.clicked.connect(self.refresh)
+        btn_row.addWidget(self.create_mask_btn)
+        btn_row.addStretch()
+        btn_row.addWidget(self.refresh_btn)
+        main_layout.addLayout(btn_row)
 
         # Create scroll area
         self.scroll_area = QScrollArea()
@@ -68,6 +95,7 @@ class SelectionMaskPopup(QDialog):
         self.container = QWidget()
         self.grid_layout = QGridLayout(self.container)
         self.grid_layout.setSpacing(10)
+        self.grid_layout.setAlignment(Qt.AlignLeft | Qt.AlignTop)
 
         self.scroll_area.setWidget(self.container)
         main_layout.addWidget(self.scroll_area)
@@ -115,6 +143,22 @@ class SelectionMaskPopup(QDialog):
             if col >= 6:
                 col = 0
                 row += 1
+
+    def _create_mask(self):
+        """Create a selection mask from the current selection, then refresh"""
+        create_selection_mask_alt()
+        self.refresh()
+
+    def refresh(self):
+        """Clear and reload the grid content"""
+        self.doc = self.app.activeDocument()
+        # Remove all widgets from the grid
+        while self.grid_layout.count():
+            item = self.grid_layout.takeAt(0)
+            if item.widget():
+                item.widget().deleteLater()
+        self.load_selection_masks()
+        self.adjust_size()
 
     def activate_selection(self, selection_mask):
         """Activate the selection from the clicked mask"""
@@ -173,12 +217,17 @@ class SelectionMaskPopup(QDialog):
 
 
 def create_selection_mask_popup():
-    """Main entry point"""
+    """Main entry point — ensures only one instance exists"""
+    global _popup_instance
     app = Krita.instance()
 
-    # Create and show the popup (non-modal)
-    popup = SelectionMaskPopup(app.activeWindow().qwindow())
-    popup.show()
+    if _popup_instance is not None and not _popup_instance.isHidden():
+        _popup_instance.raise_()
+        _popup_instance.activateWindow()
+        return
+
+    _popup_instance = SelectionMaskPopup(app.activeWindow().qwindow())
+    _popup_instance.show()
 
 
 class CreateSelectionMaskPopup(Extension):

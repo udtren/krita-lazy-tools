@@ -66,7 +66,7 @@ Each file in `e_scripts/` defines one `Extension` subclass:
 | `group_expand.py` | Expand all group layers |
 | `deselect_alt.py` | Deselect and switch to freehand brush |
 | `selection_mask.py` | Create selection mask from active selection |
-| `selection_mask_popup.py` | Selection mask with popup options |
+| `selection_mask_popup.py` | `SelectionMaskPopup` QDialog — shows 64×64 thumbnail grid of all masks in `Selection_Mask_Group`; Create Mask button (calls `create_selection_mask_alt` then refreshes), Refresh button, singleton instance, bold font, top-left grid alignment |
 | `set_color.py` | 9 actions to set foreground colour slots 1–9 |
 
 All action names are declared in [e_scripts/actions.action](lazy_tools/e_scripts/actions.action). Every `createActions(window)` call must use the exact `name` string from that XML.

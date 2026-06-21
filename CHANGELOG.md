@@ -3,6 +3,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## 2026-06-21
+### Changed
+- **Selection Mask Popup** (`e_scripts/selection_mask_popup.py`)
+  - Added **Create Mask** button: saves the current selection as a new mask inside `Selection_Mask_Group` (via `create_selection_mask_alt`) then refreshes the grid
+  - Added **Refresh** button: reloads all mask thumbnails without closing the popup
+  - Enforced **singleton** instance — re-triggering the action raises the existing window instead of opening a duplicate
+  - Thumbnail grid now aligns **top-left** (`Qt.AlignLeft | Qt.AlignTop`)
+  - Dialog font set to **bold**
+
 ## 2026-06-14
 ### Added
 - **Fast Image Export** docker section (`widgets/image_export_widgets.py`)
