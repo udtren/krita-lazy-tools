@@ -228,10 +228,9 @@ Creates a selection mask and places it into a layer group called `Selection_Mask
 Opens a popup window displaying all selection masks stored inside the `Selection_Mask_Group` layer group.
 
 - **Thumbnail grid** — each mask is shown as a 64×64 thumbnail, aligned top-left; click any thumbnail to load that selection into the document
-- **Create Mask** button — saves the current active selection as a new timestamped mask inside `Selection_Mask_Group` (calls the same logic as *Create Selection Mask Alternative*), then refreshes the grid automatically
+- **Create Mask** button — saves the current active selection as a new timestamped mask inside `Selection_Mask_Group`
 - **Refresh** button — re-reads the document and reloads the grid without closing the popup
-- **Single instance** — triggering the action while the popup is already open raises the existing window instead of opening a duplicate
-- Text is displayed in **bold**
+
 
 ### Deselect Alternative
 Deselect and Switch to Freehand Brush Tool in one action.
