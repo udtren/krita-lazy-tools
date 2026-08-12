@@ -1,10 +1,17 @@
-from typing import Dict
 from krita import *  # type: ignore
+
 from ..compat import (
-    QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QLineEdit,
-    Qt, QTimer, QPoint, QPixmap, QColor, QCursor,
+    QCursor,
+    QHBoxLayout,
+    QLabel,
+    QLineEdit,
+    QPushButton,
+    QSizePolicy,
+    Qt,
+    QTimer,
+    QVBoxLayout,
+    QWidget,
 )
-from lazy_tools.utils.color_scheme import ColorScheme
 
 # from lazy_tools.utils.logs import write_log
 
@@ -14,10 +21,11 @@ class NameFilterSection(QWidget):
     def __init__(self, parent=None, use_prefix_match=True, default_filter="_"):
         super().__init__(parent)
         self.parent_docker = parent
-        self.name_rows: Dict[int, "NameFilterRow"] = {}
+        self.name_rows: dict[int, NameFilterRow] = {}
         self.use_prefix_match = use_prefix_match
         self.default_filter = default_filter
         self.total_node_count = 0
+        self.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Maximum)
 
         # Main layout
         main_layout = QVBoxLayout()
@@ -171,16 +179,14 @@ class NameFilterRow(QWidget):
         self.toggle_button = QPushButton("👁")
         self.toggle_button.setFixedSize(30, 25)
         self.toggle_button.clicked.connect(self.toggle_visibility)
-        self.toggle_button.setStyleSheet(
-            """
+        self.toggle_button.setStyleSheet("""
             QPushButton {
                 background-color: #191919;
             }
             QPushButton:hover {
                 background-color: #393939;
             }
-        """
-        )
+        """)
         main_layout.addWidget(self.toggle_button)
 
         # node name label
@@ -422,8 +428,7 @@ class OpacityPopup(QWidget):
         self.setLayout(layout)
 
         # Style the popup
-        self.setStyleSheet(
-            """
+        self.setStyleSheet("""
             QWidget {
                 background-color: #2b2b2b;
                 border: 2px solid #555555;
@@ -443,8 +448,7 @@ class OpacityPopup(QWidget):
             QPushButton:pressed {
                 background-color: #5c5c5c;
             }
-        """
-        )
+        """)
 
         # Position at cursor
         self.move(cursor_pos)
