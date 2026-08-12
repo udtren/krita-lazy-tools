@@ -1,22 +1,26 @@
-from typing import Dict
+import os
+
 from krita import Krita, Node  # type: ignore
+
+from lazy_tools.config.config_loader import get_icon_dir
+from lazy_tools.utils.color_scheme import ColorScheme
+
 from ..compat import (
-    QWidget,
-    QVBoxLayout,
-    QHBoxLayout,
-    QPushButton,
-    QLabel,
-    Qt,
-    QTimer,
-    QPixmap,
     QColor,
     QCursor,
+    QGridLayout,
+    QHBoxLayout,
     QIcon,
+    QLabel,
+    QPixmap,
+    QPushButton,
     QSize,
+    QSizePolicy,
+    Qt,
+    QTimer,
+    QVBoxLayout,
+    QWidget,
 )
-from lazy_tools.utils.color_scheme import ColorScheme
-from lazy_tools.config.config_loader import get_icon_dir
-import os
 
 # from lazy_tools.utils.logs import write_log
 
@@ -29,7 +33,8 @@ class ColorFilterSection(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.parent_docker = parent
-        self.color_rows: Dict[int, "ColorFilterRow"] = {}
+        self.color_rows: dict[int, ColorFilterRow] = {}
+        self.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Maximum)
         self.setup_ui()
 
     def setup_ui(self):
@@ -51,41 +56,56 @@ class ColorFilterSection(QWidget):
         ]
 
         # Create ColorFilterRow widgets
-        color_rows_list = []
+        self.color_rows_list = []
         for i, name in enumerate(color_names, start=1):
             color = ColorScheme.COLORS[i]
             color_row = ColorFilterRow(i, name, color, self.parent_docker)
             self.color_rows[i] = color_row
-            color_rows_list.append(color_row)
+            self.color_rows_list.append(color_row)
 
-        # First row: 3 columns (Blue, Green, Yellow)
-        row1_layout = QHBoxLayout()
-        row1_layout.setSpacing(3)
-        for color_row in color_rows_list[0:3]:
-            row1_layout.addWidget(color_row)
-        row1_layout.addStretch()
-        layout.addLayout(row1_layout)
+        self.grid_layout = QGridLayout()
+        self.grid_layout.setContentsMargins(0, 0, 0, 0)
+        self.grid_layout.setHorizontalSpacing(3)
+        self.grid_layout.setVerticalSpacing(3)
+        layout.addLayout(self.grid_layout)
 
-        # Second row: 3 columns (Orange, Brown, Red)
-        row2_layout = QHBoxLayout()
-        row2_layout.setSpacing(3)
-        for color_row in color_rows_list[3:6]:
-            row2_layout.addWidget(color_row)
-        row2_layout.addStretch()
-        layout.addLayout(row2_layout)
-
-        # Third row: 2 columns (Purple, Grey)
-        row3_layout = QHBoxLayout()
-        row3_layout.setSpacing(3)
-        for color_row in color_rows_list[6:8]:
-            row3_layout.addWidget(color_row)
-        row3_layout.addStretch()
-        layout.addLayout(row3_layout)
-
-        # Add vertical stretch to push everything to the top
-        layout.addStretch()
-
+        self.current_column_count = 0
+        self._relayout_color_rows()
         self.setLayout(layout)
+
+    def resizeEvent(self, event):
+        """Reflow color rows when the docker width changes."""
+        super().resizeEvent(event)
+        self._relayout_color_rows()
+
+    def _get_column_count(self) -> int:
+        """Calculate how many color rows fit in the current section width."""
+        item_width = 63  # ColorFilterRow fixed width plus horizontal spacing.
+        available_width = self.width()
+        if available_width <= 0 and self.parent_docker:
+            available_width = self.parent_docker.width()
+        if available_width <= 0:
+            available_width = item_width * 3
+        return max(1, min(len(self.color_rows_list), available_width // item_width))
+
+    def _relayout_color_rows(self):
+        """Place color filter rows in a responsive grid."""
+        column_count = self._get_column_count()
+        if column_count == self.current_column_count:
+            return
+
+        while self.grid_layout.count():
+            item = self.grid_layout.takeAt(0)
+            if item.widget():
+                item.widget().setParent(self)
+
+        for index, color_row in enumerate(self.color_rows_list):
+            row = index // column_count
+            column = index % column_count
+            self.grid_layout.addWidget(color_row, row, column, Qt.AlignLeft)
+
+        self.current_column_count = column_count
+        self.updateGeometry()
 
 
 class ColorFilterRow(QWidget):

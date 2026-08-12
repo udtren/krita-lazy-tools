@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## 2026-08-12
+### Changed
+- **Lazy Tools docker layout** (`lazy_tools_docker.py`, `widgets/color_filter_widgets.py`, `widgets/name_filter_widgets.py`)
+  - Aligned Color Filter and Name Filter section content to the top to avoid unused vertical space
+  - Changed Color Filter from fixed 3/3/2 rows to a responsive grid that adjusts column count based on docker width
+
 ## 2026-06-21
 ### Changed
 - **Selection Mask Popup** (`e_scripts/selection_mask_popup.py`)

@@ -1,33 +1,38 @@
+import os
+
 from krita import DockWidgetFactoryBase, Krita  # type: ignore
-from .compat import (
-    QWidget,
-    QVBoxLayout,
-    QHBoxLayout,
-    QPushButton,
-    QDockWidget,
-    QFrame,
-    QTimer,
-    QSize,
-    QIcon,
-)
-from lazy_tools.widgets.color_filter_widgets import ColorFilterSection
-from lazy_tools.widgets.scripts_widgets import ScriptsSection
-from lazy_tools.widgets.segment_widgets import SegmentSection
-from lazy_tools.widgets.name_filter_widgets import NameFilterSection
-from lazy_tools.widgets.image_export_widgets import ImageExportWidget
+
 from lazy_tools.config.config_loader import (
+    get_icon_dir,
     get_script_enabled,
     get_section_enabled,
-    get_icon_dir,
 )
 from lazy_tools.dialogs import SettingsDialog
-import os
+from lazy_tools.widgets.color_filter_widgets import ColorFilterSection
+from lazy_tools.widgets.image_export_widgets import ImageExportWidget
+from lazy_tools.widgets.name_filter_widgets import NameFilterSection
+from lazy_tools.widgets.scripts_widgets import ScriptsSection
+from lazy_tools.widgets.segment_widgets import SegmentSection
+
+from .compat import (
+    QDockWidget,
+    QFrame,
+    QHBoxLayout,
+    QIcon,
+    QPushButton,
+    QSize,
+    QSizePolicy,
+    Qt,
+    QTimer,
+    QVBoxLayout,
+    QWidget,
+)
 
 try:
     from quick_access_manager.gesture.gesture_main import (
+        is_gesture_filter_paused,
         pause_gesture_event_filter,
         resume_gesture_event_filter,
-        is_gesture_filter_paused,
     )
 
     GESTURE_AVAILABLE = True
@@ -210,6 +215,7 @@ class CollapsibleSection(QWidget):
         self.title = title
         self.is_collapsed = collapsed
         self.content_widget = None
+        self.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Maximum)
         self.setup_ui()
 
     def setup_ui(self):
@@ -245,8 +251,11 @@ class CollapsibleSection(QWidget):
         self.content_frame = QFrame()
         self.content_frame.setFrameStyle(QFrame.Box | QFrame.Raised)
         self.content_frame.setStyleSheet("QFrame { border: 1px solid #888; }")
+        self.content_frame.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Maximum)
         self.content_layout = QVBoxLayout()
         self.content_layout.setContentsMargins(1, 1, 1, 1)
+        self.content_layout.setSpacing(0)
+        self.content_layout.setAlignment(Qt.AlignTop)
         self.content_frame.setLayout(self.content_layout)
 
         self.main_layout.addWidget(self.content_frame)
@@ -254,7 +263,6 @@ class CollapsibleSection(QWidget):
 
         # Set initial visibility based on collapsed state
         self.content_frame.setVisible(not self.is_collapsed)
-        self.content_layout.addStretch()
 
     def set_content_widget(self, widget: QWidget):
         """Set the widget to be shown/hidden in this section."""
@@ -262,7 +270,8 @@ class CollapsibleSection(QWidget):
             self.content_layout.removeWidget(self.content_widget)
 
         self.content_widget = widget
-        self.content_layout.addWidget(widget)
+        widget.setSizePolicy(QSizePolicy.Preferred, QSizePolicy.Maximum)
+        self.content_layout.addWidget(widget, 0, Qt.AlignTop)
 
     def toggle_collapsed(self):
         """Toggle the collapsed state of this section."""
