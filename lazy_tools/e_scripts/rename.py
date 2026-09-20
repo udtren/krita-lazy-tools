@@ -1,8 +1,8 @@
 from krita import *
 from ..compat import (
-    QDialog, QVBoxLayout, QHBoxLayout, QListWidget, QListWidgetItem,
+    QDialog, QVBoxLayout, QHBoxLayout, QGridLayout, QScrollArea, QWidget,
     QApplication, QComboBox, QLineEdit, QCheckBox, QPushButton,
-    Qt, QSize, QPixmap, QIcon, QCursor, QColor,
+    Qt, QPixmap, QIcon, QCursor, QColor,
 )
 import os
 import sys
@@ -20,7 +20,11 @@ except ImportError:
 
 # Add parent directory to path to import from lazy_tools
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
-from config.config_loader import load_name_color_list, save_name_color_list
+from config.config_loader import (
+    load_name_color_list,
+    save_name_color_list,
+    get_rename_dialog_settings,
+)
 from ..utils.color_scheme import ColorScheme
 
 
@@ -30,20 +34,34 @@ class RenameDialog(QDialog):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setWindowTitle("Rename Layer")
-        self.setMinimumSize(300, 400)
+        self.rename_settings = get_rename_dialog_settings()
+        self.setMinimumSize(240, 200)
+        self.resize(
+            self.rename_settings["default_width"],
+            self.rename_settings["default_height"],
+        )
         self.setup_ui()
 
     def setup_ui(self):
         """Setup the dialog UI"""
         layout = QVBoxLayout()
 
-        # Create list widget
-        self.list_widget = QListWidget()
-        self.list_widget.itemClicked.connect(self.on_item_clicked)
+        self.grid_columns = self.rename_settings["grid_columns"]
+
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+
+        self.name_grid_widget = QWidget()
+        self.name_grid_layout = QGridLayout()
+        self.name_grid_layout.setContentsMargins(0, 0, 0, 0)
+        self.name_grid_layout.setSpacing(4)
+        self.name_grid_layout.setAlignment(Qt.AlignTop | Qt.AlignLeft)
+        self.name_grid_widget.setLayout(self.name_grid_layout)
 
         # Load and parse name color list
         content = load_name_color_list()
         if content:
+            button_index = 0
             lines = content.strip().split("\n")
             for line in lines:
                 line = line.strip()
@@ -59,30 +77,17 @@ class RenameDialog(QDialog):
                     name = parts[0].strip()
                     color_name = parts[1].strip() if len(parts) > 1 else None
 
-                # Create list item
-                item = QListWidgetItem()
-                item.setData(Qt.UserRole, name)
-                item.setData(Qt.UserRole + 1, color_name)
+                button = self.create_name_button(name, color_name)
+                row = button_index // self.grid_columns
+                column = button_index % self.grid_columns
+                self.name_grid_layout.addWidget(button, row, column)
+                button_index += 1
 
-                # Set display text and icon
-                if color_name:
-                    # Find color index from color name
-                    color_index = self.get_color_index(color_name)
-                    if color_index > 0:
-                        # Create color icon
-                        color = ColorScheme.COLORS.get(color_index)
-                        if color:
-                            pixmap = QPixmap(14, 14)
-                            pixmap.fill(color)
-                            item.setIcon(QIcon(pixmap))
+            for column in range(self.grid_columns):
+                self.name_grid_layout.setColumnStretch(column, 1)
 
-                    item.setText(name)
-                else:
-                    item.setText(name)
-
-                self.list_widget.addItem(item)
-
-        layout.addWidget(self.list_widget)
+        scroll_area.setWidget(self.name_grid_widget)
+        layout.addWidget(scroll_area)
 
         # Manual input section
         manual_layout = QHBoxLayout()
@@ -146,6 +151,27 @@ class RenameDialog(QDialog):
 
         self.setLayout(layout)
 
+    def create_name_button(self, name, color_name):
+        """Create a clickable preset button for the rename grid."""
+        button = QPushButton(name)
+        button.setMinimumHeight(28)
+        button.setStyleSheet("text-align: left; padding: 3px 6px;")
+        button.clicked.connect(
+            lambda _checked=False, preset_name=name, preset_color=color_name: (
+                self.apply_name_color(preset_name, preset_color)
+            )
+        )
+
+        if color_name:
+            color_index = self.get_color_index(color_name)
+            color = ColorScheme.COLORS.get(color_index)
+            if color:
+                pixmap = QPixmap(14, 14)
+                pixmap.fill(color)
+                button.setIcon(QIcon(pixmap))
+
+        return button
+
     def get_color_index(self, color_name):
         """Get color index from color name
 
@@ -173,15 +199,8 @@ class RenameDialog(QDialog):
         }
         return color_map.get(normalized_name, 0)
 
-    def on_item_clicked(self, item):
-        """Handle item click - rename active layer
-
-        Args:
-            item (QListWidgetItem): Clicked item
-        """
-        name = item.data(Qt.UserRole)
-        color_name = item.data(Qt.UserRole + 1)
-
+    def apply_name_color(self, name, color_name):
+        """Rename the active layer and apply the optional color label."""
         # Get active document and node
         app = Krita.instance()
         doc = app.activeDocument()
