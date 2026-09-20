@@ -53,6 +53,12 @@ DEFAULT_BLENDING_MODES = [
     "greater",
 ]
 
+DEFAULT_RENAME_DIALOG_SETTINGS = {
+    "grid_columns": 3,
+    "default_width": 500,
+    "default_height": 800,
+}
+
 
 def get_default_config():
     """Get the default configuration settings
@@ -66,6 +72,7 @@ def get_default_config():
         "name_filter_prefix_section": {"enabled": True},
         "name_filter_section": {"enabled": True},
         "blending_modes": DEFAULT_BLENDING_MODES,
+        "rename_dialog": DEFAULT_RENAME_DIALOG_SETTINGS,
         "foreground_color": {
             "color1": {"r": 136, "g": 136, "b": 136, "a": 255},
             "color2": {"r": 136, "g": 136, "b": 136, "a": 255},
@@ -319,6 +326,29 @@ def save_blending_modes(modes):
     """
     config = load_config()
     config["blending_modes"] = modes
+    return save_config(config)
+
+
+def get_rename_dialog_settings():
+    """Return saved Rename Layer dialog UI settings."""
+    config = load_config()
+    settings = dict(DEFAULT_RENAME_DIALOG_SETTINGS)
+    settings.update(config.get("rename_dialog", {}))
+
+    settings["grid_columns"] = max(1, int(settings.get("grid_columns", 3)))
+    settings["default_width"] = max(240, int(settings.get("default_width", 500)))
+    settings["default_height"] = max(200, int(settings.get("default_height", 800)))
+    return settings
+
+
+def save_rename_dialog_settings(grid_columns, default_width, default_height):
+    """Persist Rename Layer dialog UI settings."""
+    config = load_config()
+    config["rename_dialog"] = {
+        "grid_columns": max(1, int(grid_columns)),
+        "default_width": max(240, int(default_width)),
+        "default_height": max(200, int(default_height)),
+    }
     return save_config(config)
 
 

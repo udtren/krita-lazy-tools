@@ -26,6 +26,8 @@ from ..config.config_loader import (
     set_section_enabled,
     get_blending_modes,
     save_blending_modes,
+    get_rename_dialog_settings,
+    save_rename_dialog_settings,
     get_export_settings,
     save_export_settings,
     get_export_button_font_size,
@@ -183,6 +185,29 @@ class SettingsDialog(QDialog):
         )
         layout.addWidget(description_label)
 
+        rename_settings = get_rename_dialog_settings()
+
+        grid_settings_layout = QFormLayout()
+
+        self.rename_grid_columns = QSpinBox()
+        self.rename_grid_columns.setRange(1, 12)
+        self.rename_grid_columns.setValue(rename_settings["grid_columns"])
+        grid_settings_layout.addRow("Popup grid columns:", self.rename_grid_columns)
+
+        self.rename_default_width = QSpinBox()
+        self.rename_default_width.setRange(240, 2000)
+        self.rename_default_width.setSuffix(" px")
+        self.rename_default_width.setValue(rename_settings["default_width"])
+        grid_settings_layout.addRow("Popup default width:", self.rename_default_width)
+
+        self.rename_default_height = QSpinBox()
+        self.rename_default_height.setRange(200, 2000)
+        self.rename_default_height.setSuffix(" px")
+        self.rename_default_height.setValue(rename_settings["default_height"])
+        grid_settings_layout.addRow("Popup default height:", self.rename_default_height)
+
+        layout.addLayout(grid_settings_layout)
+
         self.name_color_list_text = QTextEdit()
         self.name_color_list_text.setPlaceholderText(
             "Enter layer names here, one per line...\n"
@@ -311,6 +336,12 @@ class SettingsDialog(QDialog):
 
         name_color_content = self.name_color_list_text.toPlainText()
         save_name_color_list(name_color_content)
+
+        save_rename_dialog_settings(
+            self.rename_grid_columns.value(),
+            self.rename_default_width.value(),
+            self.rename_default_height.value(),
+        )
 
         modes_text = self.blending_modes_text.toPlainText()
         modes = [m.strip() for m in modes_text.splitlines() if m.strip()]
